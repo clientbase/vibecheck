@@ -33,7 +33,19 @@ export async function submitVibeReport(
   }
 ): Promise<{
   success: boolean;
-  vibeReport: any;
+  vibeReport: {
+    id: string;
+    vibeLevel: string;
+    queueLength: string;
+    coverCharge: number;
+    musicGenre: string;
+    notes?: string | null;
+    submittedAt: string;
+    venue: {
+      name: string;
+      slug: string;
+    };
+  };
   rateLimit: {
     remaining: number;
     resetTime: string;
