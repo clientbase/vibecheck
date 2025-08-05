@@ -3,12 +3,13 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(
   request: Request,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
+  const { slug } = await params;
   try {
     const venue = await prisma.venue.findUnique({
       where: {
-        slug: params.slug,
+        slug: slug,
       },
       include: {
         vibeReports: {
