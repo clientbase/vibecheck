@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum VibeLevel {
+  DEAD
+  MID
+  LIT
+  CHAOTIC
+}
+
+enum QueueLength {
+  NONE
+  SHORT
+  LONG
+  INSANE
+}
+
+model Venue {
+  id             String        @id @default(uuid())
+  name           String
+  slug           String        @unique
+  address        String
+  lat            Float
+  lon            Float
+  categories     String[]      // Example: ["hip-hop", "rooftop"]
+  isFeatured     Boolean       @default(false)
+  coverPhotoUrl  String?       
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  vibeReports    VibeReport[]
+}
+
+model VibeReport {
+  id            String       @id @default(uuid())
+  venue         Venue        @relation(fields: [venueId], references: [id])
+  venueId       String
+
+  submittedAt   DateTime     @default(now())
+  vibeLevel     VibeLevel
+  queueLength   QueueLength
+  coverCharge   Int
+  musicGenre    String
+  notes         String?
+
+  ipAddress     String?      // For light anti-spam tracking
+  userAgent     String?
+  geoHint       String?      // Browser-based or derived from IP
+
+  userAnonId    String?      // Optional: Fingerprinted session or device ID
+}
