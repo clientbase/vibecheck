@@ -90,8 +90,8 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
           Submit Vibe Report
         </Button>
       </DrawerTrigger>
-      <DrawerContent>
-        <div className="mx-auto w-full max-w-sm">
+      <DrawerContent className="max-h-[90vh]">
+        <div className="mx-auto w-full max-w-sm max-h-[85vh] overflow-y-auto pb-safe">
           <DrawerHeader>
             <DrawerTitle>Submit Vibe Report</DrawerTitle>
             <DrawerDescription>
@@ -166,11 +166,12 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
                 value={formData.notes}
                 onChange={(e) => handleInputChange("notes", e.target.value)}
                 rows={3}
+                className="resize-none"
               />
             </div>
           </form>
 
-          <DrawerFooter>
+          <DrawerFooter className="pb-safe">
             <Button 
               onClick={handleSubmit} 
               disabled={loading}
