@@ -11,7 +11,7 @@
         "club"
       ],
       "isFeatured":false,
-      "coverPhotoUrl":"https:\/\/example.com\/photos\/the-velvet-underground.jpg",
+      "coverPhotoUrl":"https:\/\/images.pexels.com\/photos\/2114365\/pexels-photo-2114365.jpeg",
       "createdAt":"2025-08-05T15:11:18.846910",
       "updatedAt":"2025-08-05T15:11:18.846921"
     },
@@ -27,7 +27,7 @@
         "rooftop"
       ],
       "isFeatured":false,
-      "coverPhotoUrl":"https:\/\/example.com\/photos\/toybox.jpg",
+      "coverPhotoUrl":"https:\/\/images.pexels.com\/photos\/801863\/pexels-photo-801863.jpeg",
       "createdAt":"2025-08-05T15:11:18.847325",
       "updatedAt":"2025-08-05T15:11:18.847327"
     },
@@ -43,7 +43,7 @@
         "mainstream"
       ],
       "isFeatured":true,
-      "coverPhotoUrl":"https:\/\/example.com\/photos\/rebel.jpg",
+      "coverPhotoUrl":"https:\/\/images.pexels.com\/photos\/2111015\/pexels-photo-2111015.jpeg",
       "createdAt":"2025-08-05T15:11:18.847529",
       "updatedAt":"2025-08-05T15:11:18.847532"
     },
@@ -59,7 +59,7 @@
         "dance"
       ],
       "isFeatured":false,
-      "coverPhotoUrl":"https:\/\/example.com\/photos\/coda.jpg",
+      "coverPhotoUrl":"https:\/\/images.pexels.com\/photos\/2747446\/pexels-photo-2747446.jpeg",
       "createdAt":"2025-08-05T15:11:18.847860",
       "updatedAt":"2025-08-05T15:11:18.847862"
     },
@@ -75,7 +75,7 @@
         "live"
       ],
       "isFeatured":true,
-      "coverPhotoUrl":"https:\/\/example.com\/photos\/lost-and-found.jpg",
+      "coverPhotoUrl":"https:\/\/images.pexels.com\/photos\/1587927\/pexels-photo-1587927.jpeg",
       "createdAt":"2025-08-05T15:11:18.848068",
       "updatedAt":"2025-08-05T15:11:18.848071"
     },
@@ -91,7 +91,7 @@
         "underground"
       ],
       "isFeatured":false,
-      "coverPhotoUrl":"https:\/\/example.com\/photos\/bar-244.jpg",
+      "coverPhotoUrl":"https:\/\/images.pexels.com\/photos\/2078071\/pexels-photo-2078071.jpeg",
       "createdAt":"2025-08-05T15:11:18.848290",
       "updatedAt":"2025-08-05T15:11:18.848292"
     },
@@ -107,7 +107,7 @@
         "chill"
       ],
       "isFeatured":true,
-      "coverPhotoUrl":"https:\/\/example.com\/photos\/the-drake-underground.jpg",
+      "coverPhotoUrl":"https:\/\/images.pexels.com\/photos\/1763075\/pexels-photo-1763075.jpeg",
       "createdAt":"2025-08-05T15:11:18.848472",
       "updatedAt":"2025-08-05T15:11:18.848474"
     },
@@ -123,7 +123,7 @@
         "party"
       ],
       "isFeatured":false,
-      "coverPhotoUrl":"https:\/\/example.com\/photos\/apartment-200.jpg",
+      "coverPhotoUrl":"https:\/\/images.pexels.com\/photos\/593467\/pexels-photo-593467.jpeg",
       "createdAt":"2025-08-05T15:11:18.848708",
       "updatedAt":"2025-08-05T15:11:18.848711"
     },
@@ -139,7 +139,7 @@
         "hype"
       ],
       "isFeatured":false,
-      "coverPhotoUrl":"https:\/\/example.com\/photos\/wildflower.jpg",
+      "coverPhotoUrl":"https:\/\/images.pexels.com\/photos\/2240763\/pexels-photo-2240763.jpeg",
       "createdAt":"2025-08-05T15:11:18.848944",
       "updatedAt":"2025-08-05T15:11:18.848946"
     },
@@ -155,7 +155,7 @@
         "bass"
       ],
       "isFeatured":true,
-      "coverPhotoUrl":"https:\/\/example.com\/photos\/love-child-social-house.jpg",
+      "coverPhotoUrl":"https:\/\/images.pexels.com\/photos\/2111016\/pexels-photo-2111016.jpeg",
       "createdAt":"2025-08-05T15:11:18.849092",
       "updatedAt":"2025-08-05T15:11:18.849093"
     }
