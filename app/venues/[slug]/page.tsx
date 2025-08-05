@@ -2,8 +2,9 @@
 
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Venue, VibeReport, VibeLevel, QueueLength } from "@/lib/types";
+import { Venue, VibeReport } from "@/lib/types";
 import { getVenueBySlug } from "@/lib/api";
+import { VibeReportCard } from "@/components/VibeReportCard";
 
 export default function VenuePage() {
   const params = useParams();
@@ -31,25 +32,7 @@ export default function VenuePage() {
     }
   }, [slug]);
 
-  const getVibeLevelColor = (level: VibeLevel) => {
-    switch (level) {
-      case VibeLevel.DEAD: return "text-red-600";
-      case VibeLevel.MID: return "text-yellow-600";
-      case VibeLevel.LIT: return "text-green-600";
-      case VibeLevel.CHAOTIC: return "text-purple-600";
-      default: return "text-gray-600";
-    }
-  };
 
-  const getQueueLengthColor = (length: QueueLength) => {
-    switch (length) {
-      case QueueLength.NONE: return "text-green-600";
-      case QueueLength.SHORT: return "text-yellow-600";
-      case QueueLength.LONG: return "text-orange-600";
-      case QueueLength.INSANE: return "text-red-600";
-      default: return "text-gray-600";
-    }
-  };
 
   if (loading) {
     return (
@@ -115,38 +98,7 @@ export default function VenuePage() {
         {venue.vibeReports && venue.vibeReports.length > 0 ? (
           <div className="grid gap-4">
             {venue.vibeReports.map((report: VibeReport) => (
-              <div
-                key={report.id}
-                className="bg-card border border-border rounded-lg p-6 shadow-sm"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-4">
-                    <span className={`font-semibold ${getVibeLevelColor(report.vibeLevel)}`}>
-                      {report.vibeLevel}
-                    </span>
-                    <span className={`font-semibold ${getQueueLengthColor(report.queueLength)}`}>
-                      Queue: {report.queueLength}
-                    </span>
-                    <span className="text-gray-600">
-                      Cover: ${report.coverCharge}
-                    </span>
-                  </div>
-                  <span className="text-sm text-gray-500">
-                    {new Date(report.submittedAt).toLocaleDateString()}
-                  </span>
-                </div>
-                
-                <div className="mb-3">
-                  <span className="text-sm text-gray-600">Music: </span>
-                  <span className="font-medium">{report.musicGenre}</span>
-                </div>
-                
-                {report.notes && (
-                  <div className="bg-muted p-3 rounded">
-                    <p className="text-sm text-muted-foreground">{report.notes}</p>
-                  </div>
-                )}
-              </div>
+              <VibeReportCard key={report.id} report={report} />
             ))}
           </div>
         ) : (
