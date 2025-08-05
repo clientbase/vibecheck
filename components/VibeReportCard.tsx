@@ -83,7 +83,7 @@ export function VibeReportCard({ report }: VibeReportCardProps) {
         {report.notes && (
           <div className="bg-muted/50 p-3 rounded-md">
             <p className="text-sm text-muted-foreground italic">
-              "{report.notes}"
+              &ldquo;{report.notes}&rdquo;
             </p>
           </div>
         )}
