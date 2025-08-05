@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { Venue, VibeReport } from "@/lib/types";
 import { getVenueBySlug } from "@/lib/api";
 import { VibeReportCard } from "@/components/VibeReportCard";
+import { VibeReportForm } from "@/components/VibeReportForm";
 
 export default function VenuePage() {
   const params = useParams();
@@ -92,9 +93,12 @@ export default function VenuePage() {
         </div>
       </div>
 
-      {/* Vibe Reports Section */}
+      {/* Submit Vibe Report Section */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-6">Recent Vibe Reports</h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold">Recent Vibe Reports</h2>
+          <VibeReportForm venueSlug={venue.slug} venueName={venue.name} />
+        </div>
         {venue.vibeReports && venue.vibeReports.length > 0 ? (
           <div className="grid gap-4">
             {venue.vibeReports.map((report: VibeReport) => (
@@ -103,7 +107,8 @@ export default function VenuePage() {
           </div>
         ) : (
           <div className="text-center py-8 text-gray-500">
-            No vibe reports yet. Be the first to report the vibe!
+            <p className="mb-4">No vibe reports yet. Be the first to report the vibe!</p>
+            <VibeReportForm venueSlug={venue.slug} venueName={venue.name} />
           </div>
         )}
       </div>

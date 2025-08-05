@@ -20,4 +20,37 @@ export async function getVenueBySlug(slug: string): Promise<Venue> {
   }
   
   return response.json();
+}
+
+export async function submitVibeReport(
+  slug: string, 
+  data: {
+    vibeLevel: string;
+    queueLength: string;
+    coverCharge: number;
+    musicGenre: string;
+    notes?: string;
+  }
+): Promise<{
+  success: boolean;
+  vibeReport: any;
+  rateLimit: {
+    remaining: number;
+    resetTime: string;
+  };
+}> {
+  const response = await fetch(`${API_BASE_URL}/api/venues/${slug}/vibe-reports`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || `Failed to submit vibe report: ${response.statusText}`);
+  }
+  
+  return response.json();
 } 
