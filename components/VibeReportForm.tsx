@@ -99,7 +99,7 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
             </DrawerDescription>
           </DrawerHeader>
           
-          <form onSubmit={handleSubmit} className="space-y-4 px-4">
+          <form onSubmit={handleSubmit} className="space-y-3 px-4">
             <div className="space-y-2">
               <Label htmlFor="vibeLevel">Vibe Level *</Label>
               <Select 

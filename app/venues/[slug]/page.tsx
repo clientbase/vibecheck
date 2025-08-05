@@ -97,6 +97,8 @@ export default function VenuePage() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">Recent Vibe Reports</h2>
+        </div>
+        <div className="flex items-center justify-between mb-6">
           <VibeReportForm venueSlug={venue.slug} venueName={venue.name} />
         </div>
         {venue.vibeReports && venue.vibeReports.length > 0 ? (
