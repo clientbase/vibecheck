@@ -1,4 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Venue } from "@/lib/types";
 
 type VenueCardProps = {
@@ -6,35 +7,68 @@ type VenueCardProps = {
   onClick?: () => void;
 };
 
+const getRandomVibeEmoji = () => {
+  const vibeEmojis = ['💀', '😐', '🔥', '🤪'];
+  return vibeEmojis[Math.floor(Math.random() * vibeEmojis.length)];
+};
+
 export function VenueCard({ venue, onClick }: VenueCardProps) {
   return (
     <Card className="w-full max-w-sm cursor-pointer hover:shadow-lg transition" onClick={onClick}>
-      {venue.coverPhotoUrl && (
-        <img
-          src={venue.coverPhotoUrl}
-          alt={venue.name}
-          className="w-full h-40 object-cover rounded-t-md"
-        />
-      )}
       <CardHeader>
         <CardTitle className="truncate">{venue.name}</CardTitle>
         <div className="text-xs text-muted-foreground">{venue.address}</div>
       </CardHeader>
+      {venue.coverPhotoUrl && (
+        <img
+          src={venue.coverPhotoUrl}
+          alt={venue.name}
+          className="w-full h-40 object-cover"
+        />
+      )}
       <CardContent>
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-1 mb-3">
           {venue.categories.map((cat) => (
-            <span
+            <Badge
               key={cat}
-              className="bg-muted px-2 py-0.5 rounded text-xs font-medium"
+              variant="secondary"
+              className="text-xs"
             >
               {cat}
-            </span>
+            </Badge>
           ))}
+        </div>
+        
+        {/* Vibe Stats */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex flex-col items-start gap-1">
+              <div className="flex items-center gap-2">
+                <span className="text-4xl">{getRandomVibeEmoji()}</span>
+                <span className="text-base font-bold text-muted-foreground px-2 py-1">LIT</span>
+              </div>
+              <span className="text-sm font-medium">12 vibes in the last hour</span>
+            </div>
+          </div>
+          
+          {/* Cover & Line Info */}
+          <div className="flex flex-col items-end gap-1 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <span>💰</span>
+              <span className="font-medium">$20</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span>⏳</span>
+              <span className="font-medium">Short</span>
+            </div>
+          </div>
         </div>
       </CardContent>
       <CardFooter>
         {venue.isFeatured && (
-          <span className="text-xs font-semibold text-primary">Featured</span>
+          <Badge className="text-xs bg-yellow-500 text-dark hover:bg-yellow-600">
+            Featured
+          </Badge>
         )}
       </CardFooter>
     </Card>
