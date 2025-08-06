@@ -54,14 +54,6 @@ export default function Home() {
       return venues.map(venue => ({ ...venue, distance: undefined }));
     }
     
-    console.log('Home page - Location data:', {
-      lat: location.latitude,
-      lng: location.longitude,
-      accuracy: location.accuracy,
-      timestamp: location.timestamp ? new Date(location.timestamp).toLocaleString() : 'N/A',
-      age: location.timestamp ? Math.round((Date.now() - location.timestamp) / 1000) + 's ago' : 'N/A'
-    });
-    
     const venuesWithDistances = venues.map(venue => ({
       ...venue,
       distance: calculateDistance(location.latitude, location.longitude, venue.lat, venue.lon)

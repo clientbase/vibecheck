@@ -56,17 +56,6 @@ export default function VenuePage() {
   const distance = useMemo(() => {
     if (!location || !venue || !locationObtained) return undefined;
     
-    console.log('Venue page - Location data:', {
-      lat: location.latitude,
-      lng: location.longitude,
-      accuracy: location.accuracy,
-      timestamp: location.timestamp ? new Date(location.timestamp).toLocaleString() : 'N/A',
-      age: location.timestamp ? Math.round((Date.now() - location.timestamp) / 1000) + 's ago' : 'N/A',
-      venueName: venue.name,
-      venueLat: venue.lat,
-      venueLon: venue.lon
-    });
-    
     return calculateDistance(location.latitude, location.longitude, venue.lat, venue.lon);
   }, [location, venue, locationObtained]);
 
