@@ -69,20 +69,29 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
     setError(null);
 
     const successCallback = (position: GeolocationPosition) => {
+      const now = Date.now();
+      const timeSinceLastUpdate = location ? now - (location.timestamp || 0) : Infinity;
+      
       console.log('✅ Location obtained:', {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
         accuracy: position.coords.accuracy,
-        timestamp: new Date(position.timestamp).toLocaleString()
+        timestamp: new Date(position.timestamp).toLocaleString(),
+        timeSinceLastUpdate: `${Math.round(timeSinceLastUpdate / 1000)}s ago`
       });
       
-      const locationData: LocationData = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-        accuracy: position.coords.accuracy,
-        timestamp: position.timestamp,
-      };
-      setLocation(locationData);
+      // Only update if it's been at least 10 seconds since last update
+      if (!location || timeSinceLastUpdate > 10000) {
+        const locationData: LocationData = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+          timestamp: position.timestamp,
+        };
+        setLocation(locationData);
+      } else {
+        console.log('⏭️ Skipping location update (too frequent)');
+      }
       setLoading(false);
     };
 
