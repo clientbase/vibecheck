@@ -43,7 +43,6 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
   useEffect(() => {
     if (navigator.permissions) {
       navigator.permissions.query({ name: 'geolocation' as PermissionName }).then((result) => {
-        console.log('🔐 Permission status:', result.state);
         if (result.state === 'denied') {
           setError({
             code: 1,
@@ -57,10 +56,7 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
   const mergedOptions = useMemo(() => ({ ...defaultOptions, ...options }), [options]);
 
   const getLocation = useCallback(() => {
-    console.log('🔍 getLocation called');
-    
     if (!navigator.geolocation) {
-      console.error('❌ Geolocation not supported');
       setError({
         code: 0,
         message: 'Geolocation is not supported by this browser.',
@@ -68,12 +64,10 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
       return;
     }
 
-    console.log('✅ Geolocation supported, requesting permission...');
     setLoading(true);
     setError(null);
 
     const successCallback = (position: GeolocationPosition) => {
-      console.log('✅ Location obtained:', position.coords);
       const locationData: LocationData = {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
@@ -85,7 +79,6 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
     };
 
     const errorCallback = (error: GeolocationPositionError) => {
-      console.error('❌ Location error:', error);
       const locationError: LocationError = {
         code: error.code,
         message: error.message,

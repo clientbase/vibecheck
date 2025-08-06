@@ -1,10 +1,12 @@
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Venue } from "@/lib/types";
+import { formatDistance } from "@/lib/utils";
 
 type VenueCardProps = {
   venue: Venue;
   onClick?: () => void;
+  distance?: number;
 };
 
 const getRandomVibeEmoji = () => {
@@ -12,12 +14,21 @@ const getRandomVibeEmoji = () => {
   return vibeEmojis[Math.floor(Math.random() * vibeEmojis.length)];
 };
 
-export function VenueCard({ venue, onClick }: VenueCardProps) {
+export function VenueCard({ venue, onClick, distance }: VenueCardProps) {
   return (
     <Card className="w-full max-w-sm cursor-pointer hover:shadow-lg transition" onClick={onClick}>
       <CardHeader>
-        <CardTitle className="truncate">{venue.name}</CardTitle>
-        <div className="text-xs text-muted-foreground">{venue.address}</div>
+        <div className="flex justify-between items-start">
+          <div className="flex-1">
+            <CardTitle className="truncate">{venue.name}</CardTitle>
+            <div className="text-xs text-muted-foreground">{venue.address}</div>
+          </div>
+          {distance !== undefined && (
+            <Badge variant="outline" className="text-xs ml-2">
+              📍 {formatDistance(distance)}
+            </Badge>
+          )}
+        </div>
       </CardHeader>
       {venue.coverPhotoUrl && (
         <img

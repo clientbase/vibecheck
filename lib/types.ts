@@ -27,6 +27,7 @@ export interface Venue {
   createdAt: Date;
   updatedAt: Date;
   vibeReports?: VibeReport[];
+  distance?: number; // Distance from user location in kilometers
 }
 
 export interface VibeReport {
