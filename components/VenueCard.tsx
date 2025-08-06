@@ -47,7 +47,10 @@ export function VenueCard({ venue, onClick }: VenueCardProps) {
                 <span className="text-4xl">{getRandomVibeEmoji()}</span>
                 <span className="text-base font-bold text-muted-foreground px-2 py-1">LIT</span>
               </div>
-              <span className="text-sm font-medium">12 vibes in the last hour</span>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-xs text-muted-foreground">Total: 156 vibes</span>
+                <span className="text-xs text-muted-foreground">Last hour: 12 vibes</span>
+              </div>
             </div>
           </div>
           

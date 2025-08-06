@@ -6,6 +6,28 @@ type VibeReportCardProps = {
 };
 
 export function VibeReportCard({ report }: VibeReportCardProps) {
+  const getTimeSincePosted = (submittedAt: Date | string) => {
+    const now = new Date();
+    const posted = new Date(submittedAt);
+    const diffInSeconds = Math.floor((now.getTime() - posted.getTime()) / 1000);
+    
+    if (diffInSeconds < 60) {
+      return 'Just now';
+    } else if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `${minutes}m ago`;
+    } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `${hours}h ago`;
+    } else if (diffInSeconds < 2592000) {
+      const days = Math.floor(diffInSeconds / 86400);
+      return `${days}d ago`;
+    } else {
+      const months = Math.floor(diffInSeconds / 2592000);
+      return `${months}mo ago`;
+    }
+  };
+
   const getVibeLevelColor = (level: VibeLevel) => {
     switch (level) {
       case VibeLevel.DEAD: return "text-red-500";
@@ -57,45 +79,47 @@ export function VibeReportCard({ report }: VibeReportCardProps) {
             </span>
           </CardTitle>
           <div className="text-sm text-muted-foreground">
-            {new Date(report.submittedAt).toLocaleDateString()}
+            {getTimeSincePosted(report.submittedAt)}
           </div>
         </div>
       </CardHeader>
       
-      <CardContent className="space-y-3">
-        {(report.queueLength || report.coverCharge) && (
-          <div className="flex items-center justify-between">
-            {report.queueLength && (
-              <div className="flex items-center gap-2">
-                <span className="text-lg">{getQueueLengthIcon(report.queueLength)}</span>
-                <span className={`font-medium ${getQueueLengthColor(report.queueLength)}`}>
-                  Queue: {report.queueLength}
-                </span>
-              </div>
-            )}
-            {report.coverCharge && (
-              <div className="text-sm font-medium text-muted-foreground">
-                ${report.coverCharge} cover
-              </div>
-            )}
-          </div>
-        )}
-        
-        {report.musicGenre && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Music:</span>
-            <span className="font-medium">{report.musicGenre}</span>
-          </div>
-        )}
-        
-        {report.notes && (
-          <div className="bg-muted/50 p-3 rounded-md">
-            <p className="text-sm text-muted-foreground italic">
-              &ldquo;{report.notes}&rdquo;
-            </p>
-          </div>
-        )}
-      </CardContent>
+      {(report.queueLength || report.coverCharge || report.musicGenre || report.notes) && (
+        <CardContent className="space-y-3">
+          {(report.queueLength || report.coverCharge) && (
+            <div className="flex items-center justify-between">
+              {report.queueLength && (
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">{getQueueLengthIcon(report.queueLength)}</span>
+                  <span className={`font-medium ${getQueueLengthColor(report.queueLength)}`}>
+                    Queue: {report.queueLength}
+                  </span>
+                </div>
+              )}
+              {report.coverCharge && (
+                <div className="text-sm font-medium text-muted-foreground">
+                  ${report.coverCharge} cover
+                </div>
+              )}
+            </div>
+          )}
+          
+          {report.musicGenre && (
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Music:</span>
+              <span className="font-medium">{report.musicGenre}</span>
+            </div>
+          )}
+          
+          {report.notes && (
+            <div className="bg-muted/50 p-3 rounded-md">
+              <p className="text-sm text-muted-foreground italic">
+                &ldquo;{report.notes}&rdquo;
+              </p>
+            </div>
+          )}
+        </CardContent>
+      )}
     </Card>
   );
 } 

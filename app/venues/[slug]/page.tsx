@@ -93,13 +93,30 @@ export default function VenuePage() {
         </div>
       </div>
 
+      {/* Vibe Stats Section */}
+      <div className="mb-8">
+        <div className="bg-card border border-border rounded-lg p-6">
+          <h3 className="text-lg font-semibold mb-4">Vibe Statistics</h3>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-primary">156</div>
+              <div className="text-sm text-muted-foreground">Total Vibes</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-green-500">12</div>
+              <div className="text-sm text-muted-foreground">Last Hour</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Submit Vibe Report Section */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Recent Vibe Reports</h2>
+          <VibeReportForm venueSlug={venue.slug} venueName={venue.name} />
         </div>
         <div className="flex items-center justify-between mb-6">
-          <VibeReportForm venueSlug={venue.slug} venueName={venue.name} />
+          <h2 className="text-2xl font-bold">Recent Vibe Reports</h2>
         </div>
         {venue.vibeReports && venue.vibeReports.length > 0 ? (
           <div className="grid gap-4">
