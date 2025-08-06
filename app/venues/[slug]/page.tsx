@@ -1,11 +1,13 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Venue, VibeReport } from "@/lib/types";
 import { getVenueBySlug } from "@/lib/api";
 import { VibeReportCard } from "@/components/VibeReportCard";
 import { VibeReportForm } from "@/components/VibeReportForm";
+import { useLocation } from "@/lib/useLocation";
+import { calculateDistance, formatDistance } from "@/lib/utils";
 
 export default function VenuePage() {
   const params = useParams();
@@ -14,6 +16,14 @@ export default function VenuePage() {
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [locationObtained, setLocationObtained] = useState(false);
+  
+  // Location hook - auto-get location on mount
+  const { location, error: locationError, loading: locationLoading, getLocation } = useLocation({
+    enableHighAccuracy: true,
+    timeout: 10000,
+    maximumAge: 300000, // 5 minutes
+  });
 
   useEffect(() => {
     async function fetchVenue() {
@@ -32,6 +42,26 @@ export default function VenuePage() {
       fetchVenue();
     }
   }, [slug]);
+
+  // Auto-get location on mount
+  useEffect(() => {
+    if (!location && !locationLoading && !locationError) {
+      getLocation();
+    }
+  }, [location, locationLoading, locationError, getLocation]);
+
+  // Track when location is obtained
+  useEffect(() => {
+    if (location && !locationObtained) {
+      setLocationObtained(true);
+    }
+  }, [location, locationObtained]);
+
+  // Calculate distance when location and venue are available
+  const distance = useMemo(() => {
+    if (!location || !venue || !locationObtained) return undefined;
+    return calculateDistance(location.latitude, location.longitude, venue.lat, venue.lon);
+  }, [location, venue, locationObtained]);
 
 
 
@@ -72,7 +102,16 @@ export default function VenuePage() {
             />
           )}
           <div className="flex-1 min-w-0">
-            <h1 className="text-3xl sm:text-4xl font-bold mb-2 break-words">{venue.name}</h1>
+            <div className="flex items-start justify-between mb-2">
+              <h1 className="text-3xl sm:text-4xl font-bold break-words flex-1">{venue.name}</h1>
+              {distance !== undefined && (
+                <div className="ml-4 flex-shrink-0">
+                  <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                    📍 {formatDistance(distance)}
+                  </span>
+                </div>
+              )}
+            </div>
             <p className="text-gray-600 mb-4 break-words">{venue.address}</p>
             <div className="flex flex-wrap gap-2 mb-4">
               {venue.categories.map((category) => (
