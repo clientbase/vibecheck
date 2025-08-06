@@ -30,7 +30,7 @@ export interface UseLocationOptions {
 const defaultOptions: UseLocationOptions = {
   enableHighAccuracy: true,
   timeout: 30000, // 30 seconds - longer timeout for mobile GPS
-  maximumAge: 0, // Force fresh location
+  maximumAge: 30000, // 30 seconds - allow cached location within 30s
   watch: false,
 };
 

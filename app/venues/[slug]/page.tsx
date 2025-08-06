@@ -22,7 +22,7 @@ export default function VenuePage() {
   const { location, error: locationError, loading: locationLoading, getLocation } = useLocationWatch({
     enableHighAccuracy: true,
     timeout: 30000, // 30 seconds for mobile GPS
-    maximumAge: 0, // Force fresh location every time
+    maximumAge: 30000, // 30 seconds - allow cached location within 30s
   });
 
   useEffect(() => {
