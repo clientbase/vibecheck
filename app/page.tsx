@@ -6,7 +6,7 @@ import { Venue } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useMemo } from "react";
 import { getVenues } from "@/lib/api";
-import { useLocation } from "@/lib/useLocation";
+import { useLocationWatch } from "@/lib/useLocation";
 import { calculateDistance } from "@/lib/utils";
 
 export default function Home() {
@@ -16,11 +16,11 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [locationObtained, setLocationObtained] = useState(false);
   
-  // Location hook - auto-get location on mount
-  const { location, error: locationError, loading: locationLoading, getLocation } = useLocation({
+  // Location hook - watch for location changes
+  const { location, error: locationError, loading: locationLoading, getLocation } = useLocationWatch({
     enableHighAccuracy: true,
     timeout: 10000,
-    maximumAge: 300000, // 5 minutes
+    maximumAge: 0, // Force fresh location every time
   });
 
   useEffect(() => {
@@ -39,12 +39,7 @@ export default function Home() {
     fetchVenues();
   }, []);
 
-  // Auto-get location on mount
-  useEffect(() => {
-    if (!location && !locationLoading && !locationError) {
-      getLocation();
-    }
-  }, [location, locationLoading, locationError, getLocation]);
+
 
   // Track when location is obtained
   useEffect(() => {
@@ -58,6 +53,14 @@ export default function Home() {
     if (!location || !locationObtained) {
       return venues.map(venue => ({ ...venue, distance: undefined }));
     }
+    
+    console.log('Home page - Location data:', {
+      lat: location.latitude,
+      lng: location.longitude,
+      accuracy: location.accuracy,
+      timestamp: location.timestamp ? new Date(location.timestamp).toLocaleString() : 'N/A',
+      age: location.timestamp ? Math.round((Date.now() - location.timestamp) / 1000) + 's ago' : 'N/A'
+    });
     
     const venuesWithDistances = venues.map(venue => ({
       ...venue,

@@ -6,7 +6,7 @@ import { Venue, VibeReport } from "@/lib/types";
 import { getVenueBySlug } from "@/lib/api";
 import { VibeReportCard } from "@/components/VibeReportCard";
 import { VibeReportForm } from "@/components/VibeReportForm";
-import { useLocation } from "@/lib/useLocation";
+import { useLocationWatch } from "@/lib/useLocation";
 import { calculateDistance, formatDistance } from "@/lib/utils";
 
 export default function VenuePage() {
@@ -18,11 +18,11 @@ export default function VenuePage() {
   const [error, setError] = useState<string | null>(null);
   const [locationObtained, setLocationObtained] = useState(false);
   
-  // Location hook - auto-get location on mount
-  const { location, error: locationError, loading: locationLoading, getLocation } = useLocation({
+  // Location hook - watch for location changes
+  const { location, error: locationError, loading: locationLoading, getLocation } = useLocationWatch({
     enableHighAccuracy: true,
     timeout: 10000,
-    maximumAge: 300000, // 5 minutes
+    maximumAge: 0, // Force fresh location every time
   });
 
   useEffect(() => {
@@ -43,12 +43,7 @@ export default function VenuePage() {
     }
   }, [slug]);
 
-  // Auto-get location on mount
-  useEffect(() => {
-    if (!location && !locationLoading && !locationError) {
-      getLocation();
-    }
-  }, [location, locationLoading, locationError, getLocation]);
+
 
   // Track when location is obtained
   useEffect(() => {
@@ -60,6 +55,18 @@ export default function VenuePage() {
   // Calculate distance when location and venue are available
   const distance = useMemo(() => {
     if (!location || !venue || !locationObtained) return undefined;
+    
+    console.log('Venue page - Location data:', {
+      lat: location.latitude,
+      lng: location.longitude,
+      accuracy: location.accuracy,
+      timestamp: location.timestamp ? new Date(location.timestamp).toLocaleString() : 'N/A',
+      age: location.timestamp ? Math.round((Date.now() - location.timestamp) / 1000) + 's ago' : 'N/A',
+      venueName: venue.name,
+      venueLat: venue.lat,
+      venueLon: venue.lon
+    });
+    
     return calculateDistance(location.latitude, location.longitude, venue.lat, venue.lon);
   }, [location, venue, locationObtained]);
 
