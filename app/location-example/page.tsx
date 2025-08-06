@@ -26,9 +26,9 @@ export default function LocationExamplePage() {
         <div className="mt-8 p-4 bg-blue-50 rounded-lg">
           <h3 className="text-lg font-semibold mb-2">How to use the location hook:</h3>
           <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-            <li>Click "Get Location" to manually trigger location detection</li>
-            <li>Use "Get Location Once" for a one-time fetch</li>
-            <li>The "Watch Location Changes" section automatically tracks your position</li>
+            <li>Click &ldquo;Get Location&rdquo; to manually trigger location detection</li>
+            <li>Use &ldquo;Get Location Once&rdquo; for a one-time fetch</li>
+            <li>The &ldquo;Watch Location Changes&rdquo; section automatically tracks your position</li>
             <li>Check the browser console for any additional debugging information</li>
           </ul>
         </div>
