@@ -31,9 +31,9 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.vibeLevel || !formData.queueLength || !formData.coverCharge || !formData.musicGenre) {
+    if (!formData.vibeLevel) {
       toast.error("Missing Information", {
-        description: "Please fill in all required fields.",
+        description: "Please select a vibe level.",
       });
       return;
     }
@@ -44,7 +44,7 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
       const result = await submitVibeReport(venueSlug, {
         vibeLevel: formData.vibeLevel as VibeLevel,
         queueLength: formData.queueLength as QueueLength,
-        coverCharge: parseInt(formData.coverCharge),
+        coverCharge: formData.coverCharge ? parseInt(formData.coverCharge) : undefined,
         musicGenre: formData.musicGenre,
         notes: formData.notes || undefined,
       });
@@ -119,13 +119,25 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="queueLength">Queue Length *</Label>
+              <Label htmlFor="notes">Comment</Label>
+              <Textarea
+                id="notes"
+                placeholder="Share your experience..."
+                value={formData.notes}
+                onChange={(e) => handleInputChange("notes", e.target.value)}
+                rows={3}
+                className="resize-none"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="queueLength">Queue Length</Label>
               <Select 
                 value={formData.queueLength} 
                 onValueChange={(value) => handleInputChange("queueLength", value)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="How long was the line?" />
+                  <SelectValue placeholder="How long was the line? (optional)" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={QueueLength.NONE}>✅ NONE - No line</SelectItem>
@@ -137,36 +149,24 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="coverCharge">Cover Charge ($) *</Label>
+              <Label htmlFor="coverCharge">Cover Charge ($)</Label>
               <Input
                 id="coverCharge"
                 type="number"
                 min="0"
-                placeholder="0"
+                placeholder="0 (optional)"
                 value={formData.coverCharge}
                 onChange={(e) => handleInputChange("coverCharge", e.target.value)}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="musicGenre">Music Genre *</Label>
+              <Label htmlFor="musicGenre">Music Genre</Label>
               <Input
                 id="musicGenre"
-                placeholder="e.g., Hip-Hop, House, Latin"
+                placeholder="e.g., Hip-Hop, House, Latin (optional)"
                 value={formData.musicGenre}
                 onChange={(e) => handleInputChange("musicGenre", e.target.value)}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="notes">Additional Notes</Label>
-              <Textarea
-                id="notes"
-                placeholder="Any other details about your experience..."
-                value={formData.notes}
-                onChange={(e) => handleInputChange("notes", e.target.value)}
-                rows={3}
-                className="resize-none"
               />
             </div>
           </form>

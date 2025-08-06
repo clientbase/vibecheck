@@ -35,9 +35,9 @@ export interface VibeReport {
   venue?: Venue;
   submittedAt: Date;
   vibeLevel: VibeLevel;
-  queueLength: QueueLength;
-  coverCharge: number;
-  musicGenre: string;
+  queueLength?: QueueLength | null;
+  coverCharge?: number | null;
+  musicGenre?: string | null;
   notes?: string | null;
   ipAddress?: string | null; // For light anti-spam tracking
   userAgent?: string | null;
@@ -71,9 +71,9 @@ export interface CreateVenueData {
 export interface CreateVibeReportData {
   venueId: string;
   vibeLevel: VibeLevel;
-  queueLength: QueueLength;
-  coverCharge: number;
-  musicGenre: string;
+  queueLength?: QueueLength;
+  coverCharge?: number;
+  musicGenre?: string;
   notes?: string;
 }
 

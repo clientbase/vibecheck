@@ -71,9 +71,9 @@ export async function POST(
     }
     
     // Validate required fields
-    if (!vibeLevel || !queueLength || !coverCharge || !musicGenre) {
+    if (!vibeLevel) {
       return NextResponse.json(
-        { error: 'Missing required fields: vibeLevel, queueLength, coverCharge, musicGenre' },
+        { error: 'Missing required field: vibeLevel' },
         { status: 400 }
       );
     }
@@ -89,15 +89,16 @@ export async function POST(
       );
     }
     
-    if (!validQueueLengths.includes(queueLength)) {
+    // Validate optional queueLength if provided
+    if (queueLength && !validQueueLengths.includes(queueLength)) {
       return NextResponse.json(
         { error: 'Invalid queueLength. Must be one of: NONE, SHORT, LONG, INSANE' },
         { status: 400 }
       );
     }
     
-    // Validate cover charge
-    if (typeof coverCharge !== 'number' || coverCharge < 0) {
+    // Validate optional cover charge if provided
+    if (coverCharge !== undefined && (typeof coverCharge !== 'number' || coverCharge < 0)) {
       return NextResponse.json(
         { error: 'coverCharge must be a non-negative number' },
         { status: 400 }
@@ -130,9 +131,9 @@ export async function POST(
       data: {
         venueId: venue.id,
         vibeLevel,
-        queueLength,
-        coverCharge,
-        musicGenre,
+        queueLength: queueLength || null,
+        coverCharge: coverCharge || null,
+        musicGenre: musicGenre || null,
         notes: notes || null,
         ipAddress: clientIP,
         userAgent,

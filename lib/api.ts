@@ -26,9 +26,9 @@ export async function submitVibeReport(
   slug: string, 
   data: {
     vibeLevel: string;
-    queueLength: string;
-    coverCharge: number;
-    musicGenre: string;
+    queueLength?: string;
+    coverCharge?: number;
+    musicGenre?: string;
     notes?: string;
   }
 ): Promise<{

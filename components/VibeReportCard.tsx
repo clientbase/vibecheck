@@ -63,22 +63,30 @@ export function VibeReportCard({ report }: VibeReportCardProps) {
       </CardHeader>
       
       <CardContent className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-lg">{getQueueLengthIcon(report.queueLength)}</span>
-            <span className={`font-medium ${getQueueLengthColor(report.queueLength)}`}>
-              Queue: {report.queueLength}
-            </span>
+        {(report.queueLength || report.coverCharge) && (
+          <div className="flex items-center justify-between">
+            {report.queueLength && (
+              <div className="flex items-center gap-2">
+                <span className="text-lg">{getQueueLengthIcon(report.queueLength)}</span>
+                <span className={`font-medium ${getQueueLengthColor(report.queueLength)}`}>
+                  Queue: {report.queueLength}
+                </span>
+              </div>
+            )}
+            {report.coverCharge && (
+              <div className="text-sm font-medium text-muted-foreground">
+                ${report.coverCharge} cover
+              </div>
+            )}
           </div>
-          <div className="text-sm font-medium text-muted-foreground">
-            ${report.coverCharge} cover
-          </div>
-        </div>
+        )}
         
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Music:</span>
-          <span className="font-medium">{report.musicGenre}</span>
-        </div>
+        {report.musicGenre && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Music:</span>
+            <span className="font-medium">{report.musicGenre}</span>
+          </div>
+        )}
         
         {report.notes && (
           <div className="bg-muted/50 p-3 rounded-md">
