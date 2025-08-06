@@ -2,6 +2,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Venue } from "@/lib/types";
 import { formatDistance } from "@/lib/utils";
+import { GoogleMapsButton } from "@/components/GoogleMapsButton";
 
 type VenueCardProps = {
   venue: Venue;
@@ -78,12 +79,20 @@ export function VenueCard({ venue, onClick, distance }: VenueCardProps) {
           </div>
         </div>
       </CardContent>
-      <CardFooter>
-        {venue.isFeatured && (
-          <Badge className="text-xs bg-yellow-500 text-dark hover:bg-yellow-600">
-            Featured
-          </Badge>
-        )}
+      <CardFooter className="flex justify-between items-center">
+        <div className="flex gap-2">
+          {venue.isFeatured && (
+            <Badge className="text-xs bg-yellow-500 text-dark hover:bg-yellow-600">
+              Featured
+            </Badge>
+          )}
+        </div>
+        <GoogleMapsButton 
+          address={venue.address}
+          venueName={venue.name}
+          variant="outline"
+          size="sm"
+        />
       </CardFooter>
     </Card>
   );

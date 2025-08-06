@@ -6,6 +6,7 @@ import { Venue, VibeReport } from "@/lib/types";
 import { getVenueBySlug } from "@/lib/api";
 import { VibeReportCard } from "@/components/VibeReportCard";
 import { VibeReportForm } from "@/components/VibeReportForm";
+import { GoogleMapsButton } from "@/components/GoogleMapsButton";
 import { useLocationWatch } from "@/lib/useLocation";
 import { calculateDistance, formatDistance } from "@/lib/utils";
 
@@ -108,7 +109,15 @@ export default function VenuePage() {
                 </div>
               )}
             </div>
-            <p className="text-gray-600 mb-4 break-words">{venue.address}</p>
+            <div className="flex items-center gap-3 mb-4">
+              <p className="text-gray-600 break-words flex-1">{venue.address}</p>
+              <GoogleMapsButton 
+                address={venue.address}
+                venueName={venue.name}
+                variant="outline"
+                size="sm"
+              />
+            </div>
             <div className="flex flex-wrap gap-2 mb-4">
               {venue.categories.map((category) => (
                 <span
