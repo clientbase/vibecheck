@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 
 export interface LocationData {
   latitude: number;
@@ -38,6 +38,7 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
   const [location, setLocation] = useState<LocationData | null>(null);
   const [error, setError] = useState<LocationError | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const lastUpdateRef = useRef<number>(0);
 
   // Check permission status
   useEffect(() => {
@@ -70,10 +71,10 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
 
     const successCallback = (position: GeolocationPosition) => {
       const now = Date.now();
-      const timeSinceLastUpdate = location ? now - (location.timestamp || 0) : Infinity;
+      const timeSinceLastUpdate = now - lastUpdateRef.current;
       
       // Only update if it's been at least 10 seconds since last update
-      if (!location || timeSinceLastUpdate > 10000) {
+      if (timeSinceLastUpdate > 10000) {
         console.log('✅ Location updated:', {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
@@ -88,6 +89,7 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
           timestamp: position.timestamp,
         };
         setLocation(locationData);
+        lastUpdateRef.current = now;
       }
       setLoading(false);
     };
