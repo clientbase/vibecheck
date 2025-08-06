@@ -63,17 +63,17 @@ export default function VenuePage() {
     <div className="container mx-auto px-4 py-8">
       {/* Venue Header */}
       <div className="mb-8">
-        <div className="flex items-start gap-6">
+        <div className="flex flex-col sm:flex-row items-start gap-6">
           {venue.coverPhotoUrl && (
             <img
               src={venue.coverPhotoUrl}
               alt={venue.name}
-              className="w-32 h-32 object-cover rounded-lg"
+              className="w-full sm:w-32 h-48 sm:h-32 object-cover rounded-lg flex-shrink-0"
             />
           )}
-          <div className="flex-1">
-            <h1 className="text-4xl font-bold mb-2">{venue.name}</h1>
-            <p className="text-gray-600 mb-4">{venue.address}</p>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-2 break-words">{venue.name}</h1>
+            <p className="text-gray-600 mb-4 break-words">{venue.address}</p>
             <div className="flex flex-wrap gap-2 mb-4">
               {venue.categories.map((category) => (
                 <span
