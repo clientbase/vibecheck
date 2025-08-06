@@ -19,7 +19,7 @@ export default function Home() {
   // Location hook - watch for location changes
   const { location, error: locationError, loading: locationLoading, getLocation } = useLocationWatch({
     enableHighAccuracy: true,
-    timeout: 10000,
+    timeout: 30000, // 30 seconds for mobile GPS
     maximumAge: 0, // Force fresh location every time
   });
 

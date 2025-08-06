@@ -29,8 +29,8 @@ export interface UseLocationOptions {
 
 const defaultOptions: UseLocationOptions = {
   enableHighAccuracy: true,
-  timeout: 10000,
-  maximumAge: 60000, // 1 minute
+  timeout: 30000, // 30 seconds - longer timeout for mobile GPS
+  maximumAge: 0, // Force fresh location
   watch: false,
 };
 
@@ -64,10 +64,18 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
       return;
     }
 
+    console.log('📍 Starting location request...');
     setLoading(true);
     setError(null);
 
     const successCallback = (position: GeolocationPosition) => {
+      console.log('✅ Location obtained:', {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+        accuracy: position.coords.accuracy,
+        timestamp: new Date(position.timestamp).toLocaleString()
+      });
+      
       const locationData: LocationData = {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
@@ -79,6 +87,11 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
     };
 
     const errorCallback = (error: GeolocationPositionError) => {
+      console.error('❌ Location error:', {
+        code: error.code,
+        message: error.message
+      });
+      
       const locationError: LocationError = {
         code: error.code,
         message: error.message,
@@ -88,6 +101,7 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
     };
 
     if (mergedOptions.watch) {
+      console.log('🔄 Starting location watch...');
       const watchId = navigator.geolocation.watchPosition(
         successCallback,
         errorCallback,
@@ -97,6 +111,7 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
       // Return cleanup function for watch mode
       return () => navigator.geolocation.clearWatch(watchId);
     } else {
+      console.log('📍 Getting current position...');
       navigator.geolocation.getCurrentPosition(
         successCallback,
         errorCallback,
