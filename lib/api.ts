@@ -51,12 +51,27 @@ export async function submitVibeReport(
     resetTime: string;
   };
 }> {
+  // Get client IP from ipify
+  let clientIP = 'unknown';
+  try {
+    const ipResponse = await fetch('https://api.ipify.org?format=json');
+    if (ipResponse.ok) {
+      const ipData = await ipResponse.json();
+      clientIP = ipData.ip;
+    }
+  } catch (error) {
+    console.warn('Failed to get IP from ipify:', error);
+  }
+
   const response = await fetch(`${API_BASE_URL}/api/venues/${slug}/vibe-reports`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      ...data,
+      clientIP,
+    }),
   });
   
   if (!response.ok) {

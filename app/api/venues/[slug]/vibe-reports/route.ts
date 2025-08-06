@@ -13,27 +13,6 @@ interface RateLimitInfo {
 // In-memory store for rate limiting (in production, use Redis)
 const rateLimitStore = new Map<string, RateLimitInfo>();
 
-function getClientIP(request: NextRequest): string {
-  // Try to get IP from various headers
-  const forwarded = request.headers.get('x-forwarded-for');
-  const realIP = request.headers.get('x-real-ip');
-  const cfConnectingIP = request.headers.get('cf-connecting-ip');
-  
-  if (forwarded) {
-    return forwarded.split(',')[0].trim();
-  }
-  if (realIP) {
-    return realIP;
-  }
-  if (cfConnectingIP) {
-    return cfConnectingIP;
-  }
-  
-  // Fallback to connection remote address
-  // NextRequest does not have an 'ip' property, so we return 'unknown'
-  return 'unknown';
-}
-
 function checkRateLimit(ip: string): { allowed: boolean; remaining: number; resetTime: number } {
   const now = Date.now();
   const rateLimitInfo = rateLimitStore.get(ip);
@@ -68,7 +47,10 @@ export async function POST(
 ) {
   try {
     const { slug } = await params;
-    const clientIP = getClientIP(request);
+    
+    // Parse request body
+    const body = await request.json();
+    const { vibeLevel, queueLength, coverCharge, musicGenre, notes, clientIP } = body;
     
     // Check rate limit
     const rateLimit = checkRateLimit(clientIP);
@@ -87,10 +69,6 @@ export async function POST(
         }
       );
     }
-    
-    // Parse request body
-    const body = await request.json();
-    const { vibeLevel, queueLength, coverCharge, musicGenre, notes } = body;
     
     // Validate required fields
     if (!vibeLevel || !queueLength || !coverCharge || !musicGenre) {
