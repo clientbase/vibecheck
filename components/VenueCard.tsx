@@ -48,43 +48,45 @@ export function VenueCard({ venue, onClick, distance }: VenueCardProps) {
           ))}
         </div>
         
-        {/* Vibe Stats */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex flex-col items-start gap-1">
-              <div className="flex items-center gap-2">
-                <span className="text-4xl">{getVibeEmoji(venue.aggregatedData?.averageVibeLevel)}</span>
-                <span className="text-base font-bold text-muted-foreground px-2 py-1">
-                  {venue.aggregatedData?.averageVibeLevel || 'N/A'}
-                </span>
-              </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="text-xs text-muted-foreground">
-                  Total: {venue.aggregatedData?.totalVibes || 0} vibes
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  Last hour: {venue.aggregatedData?.vibesLastHour || 0} vibes
-                </span>
-              </div>
-            </div>
-          </div>
-          
-          {/* Cover & Line Info */}
-          {/* <div className="flex flex-col items-end gap-1 text-xs text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <span>💰</span>
-              <span className="font-medium">
-                {venue.aggregatedData?.averageCoverCharge ? `$${venue.aggregatedData.averageCoverCharge}` : 'N/A'}
-              </span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span>⏳</span>
-              <span className="font-medium">
-                {venue.aggregatedData?.averageQueueLength || 'N/A'}
-              </span>
-            </div>
-          </div> */}
+        {/* Vibe Emoji and Text */}
+        <div className="flex flex-col items-center mb-3">
+          <span className="text-4xl">{getVibeEmoji(venue.aggregatedData?.averageVibeLevel)}</span>
+          <span className="text-sm font-medium text-muted-foreground mt-1">
+            {venue.aggregatedData?.averageVibeLevel || 'N/A'}
+          </span>
         </div>
+        
+        {/* Vibe Stats */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-primary">
+              {venue.aggregatedData?.totalVibes || 0}
+            </div>
+            <div className="text-xs text-muted-foreground">Total Vibes</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-green-500">
+              {venue.aggregatedData?.vibesLastHour || 0}
+            </div>
+            <div className="text-xs text-muted-foreground">Last Hour</div>
+          </div>
+        </div>
+        
+        {/* Cover & Line Info */}
+        {/* <div className="flex flex-col items-end gap-1 text-xs text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <span>💰</span>
+            <span className="font-medium">
+              {venue.aggregatedData?.averageCoverCharge ? `$${venue.aggregatedData.averageCoverCharge}` : 'N/A'}
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span>⏳</span>
+            <span className="font-medium">
+              {venue.aggregatedData?.averageQueueLength || 'N/A'}
+            </span>
+          </div>
+        </div> */}
       </CardContent>
       <CardFooter className="flex justify-between items-center">
         <div className="flex gap-2">
