@@ -50,8 +50,8 @@
     "name": "Coda",
     "slug": "coda",
     "address": "794 Bathurst St, Toronto, ON",
-    "lat": 43.648135,
-    "lon": -79.402347,
+    "lat": 43.665374,
+    "lon": -79.4115403,
     "categories": [
       "latin",
       "dance"
@@ -80,8 +80,8 @@
     "name": "The Drake Underground",
     "slug": "the-drake-underground",
     "address": "1150 Queen St W, Toronto, ON",
-    "lat": 43.647884,
-    "lon": -79.404039,
+    "lat": 43.6432545,
+    "lon": -79.424546,
     "categories": [
       "rnb",
       "chill"
@@ -96,8 +96,8 @@
     "name": "Apartment 200",
     "slug": "apartment-200",
     "address": "1034 Queen St W, Toronto, ON",
-    "lat": 43.649599,
-    "lon": -79.401959,
+    "lat": 43.6440046,
+    "lon": -79.4202391,
     "categories": [
       "pop",
       "party"
