@@ -3,8 +3,8 @@
     "name": "The Velvet Underground",
     "slug": "the-velvet-underground",
     "address": "508 Queen St W, Toronto, ON",
-    "lat": 43.64804807424728,
-    "lon": -79.401519645173,
+    "lat": 43.647867,
+    "lon": -79.4014961,
     "categories": [
       "hip-hop",
       "club"
@@ -18,8 +18,8 @@
     "name": "DPRTMNT",
     "slug": "dprtmnt",
     "address": "473 Adelaide St W, Toronto, ON M5V 1T1",
-    "lat": 43.64534712793268,
-    "lon": -79.39983687116447,
+    "lat": 43.645627,
+    "lon": -79.39995569999999,
     "categories": [
       "EDM",
       "Bottle Service"
@@ -33,8 +33,8 @@
     "name": "Rebel",
     "slug": "rebel",
     "address": "11 Polson St, Toronto, ON M5A 1A4",
-    "lat": 43.64100202730685,
-    "lon": -79.35458556051536,
+    "lat": 43.6407774,
+    "lon": -79.3545752,
     "categories": [
       "EDM",
       "Hip-Hop",
@@ -50,8 +50,8 @@
     "name": "Coda",
     "slug": "coda",
     "address": "794 Bathurst St, Toronto, ON",
-    "lat": 43.66552314810926,
-    "lon": -79.41148233167888,
+    "lat": 43.665399,
+    "lon": -79.4114716,
     "categories": [
       "latin",
       "dance"
@@ -65,8 +65,8 @@
     "name": "Lost and Found",
     "slug": "lost-and-found",
     "address": "577 King St W, Toronto, ON M5V 1M1",
-    "lat": 43.64507079208901,
-    "lon": -79.39949923958157,
+    "lat": 43.6443686,
+    "lon": -79.3996657,
     "categories": [
       "Hip-Hop",
       "Exclusive"
@@ -80,8 +80,8 @@
     "name": "The Drake Underground",
     "slug": "the-drake-underground",
     "address": "1150 Queen St W, Toronto, ON",
-    "lat": 43.643351443966,
-    "lon": -79.42476356236394,
+    "lat": 43.6432497,
+    "lon": -79.4246963,
     "categories": [
       "rnb",
       "chill"
@@ -96,8 +96,8 @@
     "name": "Apartment 200",
     "slug": "apartment-200",
     "address": "1034 Queen St W, Toronto, ON",
-    "lat": 43.64421034750073,
-    "lon": -79.42022780284411,
+    "lat": 43.6440642,
+    "lon": -79.42021749999999,
     "categories": [
       "pop",
       "party"
@@ -111,8 +111,8 @@
     "name": "Lavelle",
     "slug": "lavelle",
     "address": "627 King St W, Toronto, ON M5V 1M5",
-    "lat": 43.64413574769355,
-    "lon": -79.40155698935072,
+    "lat": 43.6437993,
+    "lon": -79.4013308,
     "categories": [
       "Rooftop",
       "Lounge",
@@ -143,8 +143,8 @@
     "name": "Petty Cash",
     "slug": "petty-cash",
     "address": "487 Adelaide St W, Toronto, ON M5V 1T4",
-    "lat": 43.645639152876655,
-    "lon": -79.40076770284409,
+    "lat": 43.6454675,
+    "lon": -79.4008097,
     "categories": [
       "Casual",
       "Dance",
