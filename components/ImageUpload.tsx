@@ -185,7 +185,7 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }
           <img
             src={previewUrl}
             alt="Preview"
-            className="w-full h-32 object-cover rounded-lg border"
+            className="w-full rounded-lg border"
           />
           <Button
             type="button"
