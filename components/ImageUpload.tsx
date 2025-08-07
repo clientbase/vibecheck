@@ -23,6 +23,13 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }
     const file = event.target.files?.[0];
     if (!file) return;
 
+    console.log('File upload details:', {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      sizeInMB: (file.size / (1024 * 1024)).toFixed(2) + 'MB'
+    });
+
     // Validate file type
     if (!file.type.startsWith('image/')) {
       toast.error("Invalid file type", {
@@ -35,7 +42,7 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }
     const maxSize = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSize) {
       toast.error("File too large", {
-        description: "Please select an image smaller than 5MB",
+        description: `Image is ${(file.size / (1024 * 1024)).toFixed(1)}MB. Please select a smaller image.`,
       });
       return;
     }
@@ -68,8 +75,16 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }
       toast.success("Image uploaded successfully!");
     } catch (error) {
       console.error('Upload error:', error);
+      let errorMessage = "Failed to upload image";
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+      
       toast.error("Upload failed", {
-        description: error instanceof Error ? error.message : "Failed to upload image",
+        description: errorMessage,
       });
       setPreviewUrl(null);
     } finally {
@@ -92,6 +107,13 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }
     const file = event.target.files?.[0];
     if (!file) return;
 
+    console.log('Camera file details:', {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      sizeInMB: (file.size / (1024 * 1024)).toFixed(2) + 'MB'
+    });
+
     // Validate file type
     if (!file.type.startsWith('image/')) {
       toast.error("Invalid file type", {
@@ -104,7 +126,7 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }
     const maxSize = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSize) {
       toast.error("File too large", {
-        description: "Please capture an image smaller than 5MB",
+        description: `Image is ${(file.size / (1024 * 1024)).toFixed(1)}MB. Please capture a smaller image or use the "Choose Image" option to select a smaller file.`,
       });
       return;
     }
@@ -137,8 +159,16 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }
       toast.success("Image captured and uploaded successfully!");
     } catch (error) {
       console.error('Upload error:', error);
+      let errorMessage = "Failed to upload captured image";
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+      
       toast.error("Upload failed", {
-        description: error instanceof Error ? error.message : "Failed to upload captured image",
+        description: errorMessage,
       });
       setPreviewUrl(null);
     } finally {
