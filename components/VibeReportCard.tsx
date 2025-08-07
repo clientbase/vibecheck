@@ -84,8 +84,18 @@ export function VibeReportCard({ report }: VibeReportCardProps) {
         </div>
       </CardHeader>
       
-      {(report.queueLength || report.coverCharge || report.musicGenre || report.notes) && (
+      {(report.queueLength || report.coverCharge || report.musicGenre || report.notes || report.imageUrl) && (
         <CardContent className="space-y-3">
+          {report.imageUrl && (
+            <div className="mb-3">
+              <img
+                src={report.imageUrl}
+                alt="Vibe report image"
+                className="w-full h-48 object-cover rounded-lg"
+              />
+            </div>
+          )}
+          
           {(report.queueLength || report.coverCharge) && (
             <div className="flex items-center justify-between">
               {report.queueLength && (

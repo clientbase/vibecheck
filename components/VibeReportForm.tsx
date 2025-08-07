@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { VibeLevel, QueueLength } from "@/lib/types";
 import { submitVibeReport } from "@/lib/api";
 import { toast } from "sonner";
+import { ImageUpload } from "@/components/ImageUpload";
 
 interface VibeReportFormProps {
   venueSlug: string;
@@ -25,6 +26,7 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
     coverCharge: "",
     musicGenre: "",
     notes: "",
+    imageUrl: "",
   });
 
 
@@ -47,6 +49,7 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
         coverCharge: formData.coverCharge ? parseInt(formData.coverCharge) : undefined,
         musicGenre: formData.musicGenre,
         notes: formData.notes || undefined,
+        imageUrl: formData.imageUrl || undefined,
       });
 
       toast.success("Vibe Report Submitted!", {
@@ -60,6 +63,7 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
         coverCharge: "",
         musicGenre: "",
         notes: "",
+        imageUrl: "",
       });
       setOpen(false);
       
@@ -83,6 +87,20 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
     }));
   };
 
+  const handleImageUploaded = (imageUrl: string) => {
+    setFormData(prev => ({
+      ...prev,
+      imageUrl,
+    }));
+  };
+
+  const handleImageRemoved = () => {
+    setFormData(prev => ({
+      ...prev,
+      imageUrl: "",
+    }));
+  };
+
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
@@ -90,8 +108,8 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
           Submit Vibe Report
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="max-h-[90vh]">
-        <div className="mx-auto w-full max-w-sm max-h-[85vh] overflow-y-auto pb-safe">
+      <DrawerContent className="h-screen">
+        <div className="mx-auto w-full max-w-md h-full overflow-y-auto pb-safe">
           <DrawerHeader>
             <DrawerTitle>Submit Vibe Report</DrawerTitle>
             <DrawerDescription>
@@ -169,6 +187,12 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
                 onChange={(e) => handleInputChange("musicGenre", e.target.value)}
               />
             </div>
+
+            <ImageUpload
+              onImageUploaded={handleImageUploaded}
+              onImageRemoved={handleImageRemoved}
+              currentImageUrl={formData.imageUrl}
+            />
           </form>
 
           <DrawerFooter className="pb-safe">

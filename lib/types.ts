@@ -53,6 +53,7 @@ export interface VibeReport {
   coverCharge?: number | null;
   musicGenre?: string | null;
   notes?: string | null;
+  imageUrl?: string | null; // URL to uploaded image in Vercel Blob Store
   ipAddress?: string | null; // For light anti-spam tracking
   userAgent?: string | null;
   geoHint?: string | null; // Browser-based or derived from IP

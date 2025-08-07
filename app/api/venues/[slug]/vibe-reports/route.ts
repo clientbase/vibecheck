@@ -50,7 +50,7 @@ export async function POST(
     
     // Parse request body
     const body = await request.json();
-    const { vibeLevel, queueLength, coverCharge, musicGenre, notes, clientIP } = body;
+    const { vibeLevel, queueLength, coverCharge, musicGenre, notes, imageUrl, clientIP } = body;
     
     // Check rate limit
     const rateLimit = checkRateLimit(clientIP);
@@ -135,6 +135,7 @@ export async function POST(
         coverCharge: coverCharge || null,
         musicGenre: musicGenre || null,
         notes: notes || null,
+        imageUrl: imageUrl || null,
         ipAddress: clientIP,
         userAgent,
         geoHint,
@@ -160,6 +161,7 @@ export async function POST(
         coverCharge: vibeReport.coverCharge,
         musicGenre: vibeReport.musicGenre,
         notes: vibeReport.notes,
+        imageUrl: vibeReport.imageUrl,
         submittedAt: vibeReport.submittedAt,
         venue: vibeReport.venue,
       },

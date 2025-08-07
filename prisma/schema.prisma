@@ -58,6 +58,7 @@ model VibeReport {
   coverCharge   Int?
   musicGenre    String?
   notes         String?
+  imageUrl      String?      // URL to uploaded image in Vercel Blob Store
 
   ipAddress     String?      // For light anti-spam tracking
   userAgent     String?

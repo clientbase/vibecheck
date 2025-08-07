@@ -30,6 +30,7 @@ export async function submitVibeReport(
     coverCharge?: number;
     musicGenre?: string;
     notes?: string;
+    imageUrl?: string;
   }
 ): Promise<{
   success: boolean;
@@ -40,6 +41,7 @@ export async function submitVibeReport(
     coverCharge: number;
     musicGenre: string;
     notes?: string | null;
+    imageUrl?: string | null;
     submittedAt: string;
     venue: {
       name: string;

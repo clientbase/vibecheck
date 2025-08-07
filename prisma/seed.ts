@@ -9,8 +9,20 @@ async function main() {
 
   console.log(`Seeding ${venues.length} venues...`);
   for (const venue of venues) {
-    await prisma.venue.create({
-      data: {
+    await prisma.venue.upsert({
+      where: { id: venue.id },
+      update: {
+        name: venue.name,
+        slug: venue.slug,
+        address: venue.address,
+        lat: venue.lat,
+        lon: venue.lon,
+        categories: venue.categories,
+        isFeatured: venue.isFeatured,
+        coverPhotoUrl: venue.coverPhotoUrl,
+        updatedAt: new Date(),
+      },
+      create: {
         id: venue.id,
         name: venue.name,
         slug: venue.slug,
@@ -28,8 +40,21 @@ async function main() {
 
   console.log(`Seeding ${vibeReports.length} vibe reports...`);
   for (const report of vibeReports) {
-    await prisma.vibeReport.create({
-      data: {
+    await prisma.vibeReport.upsert({
+      where: { id: report.id },
+      update: {
+        submittedAt: new Date(report.submittedAt),
+        vibeLevel: report.vibeLevel,
+        queueLength: report.queueLength,
+        coverCharge: report.coverCharge,
+        musicGenre: report.musicGenre,
+        notes: report.notes,
+        ipAddress: report.ipAddress,
+        userAgent: report.userAgent,
+        geoHint: report.geoHint,
+        userAnonId: report.userAnonId,
+      },
+      create: {
         id: report.id,
         venueId: report.venueId,
         submittedAt: new Date(report.submittedAt),
