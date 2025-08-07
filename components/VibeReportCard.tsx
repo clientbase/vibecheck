@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { VibeReport, VibeLevel, QueueLength } from "@/lib/types";
+import { VibeReport } from "@/lib/types";
+import { VibeLevel, QueueLength, VibeLevelType, QueueLengthType } from "@/lib/constants";
 
 type VibeReportCardProps = {
   report: VibeReport;
@@ -28,7 +29,7 @@ export function VibeReportCard({ report }: VibeReportCardProps) {
     }
   };
 
-  const getVibeLevelColor = (level: VibeLevel) => {
+  const getVibeLevelColor = (level: VibeLevelType) => {
     switch (level) {
       case VibeLevel.DEAD: return "text-red-500";
       case VibeLevel.MID: return "text-yellow-500";
@@ -38,7 +39,7 @@ export function VibeReportCard({ report }: VibeReportCardProps) {
     }
   };
 
-  const getQueueLengthColor = (length: QueueLength) => {
+  const getQueueLengthColor = (length: QueueLengthType) => {
     switch (length) {
       case QueueLength.NONE: return "text-green-500";
       case QueueLength.SHORT: return "text-yellow-500";
@@ -48,7 +49,7 @@ export function VibeReportCard({ report }: VibeReportCardProps) {
     }
   };
 
-  const getVibeLevelIcon = (level: VibeLevel) => {
+  const getVibeLevelIcon = (level: VibeLevelType) => {
     switch (level) {
       case VibeLevel.DEAD: return "💀";
       case VibeLevel.MID: return "😐";
@@ -58,7 +59,7 @@ export function VibeReportCard({ report }: VibeReportCardProps) {
     }
   };
 
-  const getQueueLengthIcon = (length: QueueLength) => {
+  const getQueueLengthIcon = (length: QueueLengthType) => {
     switch (length) {
       case QueueLength.NONE: return "✅";
       case QueueLength.SHORT: return "⏳";

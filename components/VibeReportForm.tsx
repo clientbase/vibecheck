@@ -7,10 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { VibeLevel, QueueLength } from "@/lib/types";
 import { submitVibeReport } from "@/lib/api";
 import { toast } from "sonner";
 import { ImageUpload } from "@/components/ImageUpload";
+import { VibeLevel, QueueLength } from "@/lib/constants";
 
 interface VibeReportFormProps {
   venueSlug: string;
@@ -44,8 +44,8 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
     
     try {
       const result = await submitVibeReport(venueSlug, {
-        vibeLevel: formData.vibeLevel as VibeLevel,
-        queueLength: formData.queueLength as QueueLength,
+        vibeLevel: formData.vibeLevel as keyof typeof VibeLevel,
+        queueLength: formData.queueLength as keyof typeof QueueLength,
         coverCharge: formData.coverCharge ? parseInt(formData.coverCharge) : undefined,
         musicGenre: formData.musicGenre,
         notes: formData.notes || undefined,
