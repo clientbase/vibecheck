@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Venue } from "@/lib/types";
-import { formatDistance } from "@/lib/utils";
+import { formatDistance, getVibeEmoji } from "@/lib/utils";
 import { GoogleMapsButton } from "@/components/GoogleMapsButton";
 
 type VenueCardProps = {
@@ -10,10 +10,7 @@ type VenueCardProps = {
   distance?: number;
 };
 
-const getRandomVibeEmoji = () => {
-  const vibeEmojis = ['💀', '😐', '🔥', '🤪'];
-  return vibeEmojis[Math.floor(Math.random() * vibeEmojis.length)];
-};
+
 
 export function VenueCard({ venue, onClick, distance }: VenueCardProps) {
   return (
@@ -56,12 +53,18 @@ export function VenueCard({ venue, onClick, distance }: VenueCardProps) {
           <div className="flex items-center gap-2">
             <div className="flex flex-col items-start gap-1">
               <div className="flex items-center gap-2">
-                <span className="text-4xl">{getRandomVibeEmoji()}</span>
-                <span className="text-base font-bold text-muted-foreground px-2 py-1">LIT</span>
+                <span className="text-4xl">{getVibeEmoji(venue.aggregatedData?.averageVibeLevel)}</span>
+                <span className="text-base font-bold text-muted-foreground px-2 py-1">
+                  {venue.aggregatedData?.averageVibeLevel || 'N/A'}
+                </span>
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-xs text-muted-foreground">Total: 156 vibes</span>
-                <span className="text-xs text-muted-foreground">Last hour: 12 vibes</span>
+                <span className="text-xs text-muted-foreground">
+                  Total: {venue.aggregatedData?.totalVibes || 0} vibes
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  Last hour: {venue.aggregatedData?.vibesLastHour || 0} vibes
+                </span>
               </div>
             </div>
           </div>
@@ -70,11 +73,15 @@ export function VenueCard({ venue, onClick, distance }: VenueCardProps) {
           <div className="flex flex-col items-end gap-1 text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <span>💰</span>
-              <span className="font-medium">$20</span>
+              <span className="font-medium">
+                {venue.aggregatedData?.averageCoverCharge ? `$${venue.aggregatedData.averageCoverCharge}` : 'N/A'}
+              </span>
             </div>
             <div className="flex items-center gap-1">
               <span>⏳</span>
-              <span className="font-medium">Short</span>
+              <span className="font-medium">
+                {venue.aggregatedData?.averageQueueLength || 'N/A'}
+              </span>
             </div>
           </div>
         </div>

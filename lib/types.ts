@@ -14,6 +14,18 @@ export enum QueueLength {
   INSANE = "INSANE"
 }
 
+import type { VibeLevel, QueueLength } from '@/lib/generated/prisma';
+
+export interface VenueAggregatedData {
+  totalVibes: number;
+  vibesLastHour: number;
+  averageVibeLevel: VibeLevel | null;
+  averageQueueLength: QueueLength | null;
+  averageCoverCharge: number | null;
+  mostCommonMusicGenre: string | null;
+  lastVibeReportAt: Date | null;
+}
+
 export interface Venue {
   id: string;
   name: string;
@@ -28,6 +40,7 @@ export interface Venue {
   updatedAt: Date;
   vibeReports?: VibeReport[];
   distance?: number; // Distance from user location in kilometers
+  aggregatedData?: VenueAggregatedData;
 }
 
 export interface VibeReport {

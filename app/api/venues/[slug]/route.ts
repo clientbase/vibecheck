@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { calculateVenueAggregatedData } from '@/lib/aggregation';
 
 export async function GET(
   request: Request,
@@ -27,7 +28,13 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(venue);
+    // Calculate aggregated data for the venue
+    const venueWithAggregatedData = {
+      ...venue,
+      aggregatedData: calculateVenueAggregatedData(venue.vibeReports),
+    };
+
+    return NextResponse.json(venueWithAggregatedData);
   } catch (error) {
     console.error('Error fetching venue:', error);
     return NextResponse.json(

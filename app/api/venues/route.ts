@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { calculateVenueAggregatedData } from '@/lib/aggregation';
 
 export async function GET() {
   try {
     const venues = await prisma.venue.findMany({
       include: {
         vibeReports: {
-          select: {
-            id: true,
+          orderBy: {
+            submittedAt: 'desc',
           },
         },
       },
@@ -16,8 +17,14 @@ export async function GET() {
       },
     });
 
+    // Calculate aggregated data for each venue
+    const venuesWithAggregatedData = venues.map(venue => ({
+      ...venue,
+      aggregatedData: calculateVenueAggregatedData(venue.vibeReports),
+    }));
+
     return NextResponse.json({
-      venues,
+      venues: venuesWithAggregatedData,
       total: venues.length,
     });
   } catch (error) {

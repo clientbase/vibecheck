@@ -8,7 +8,7 @@ import { VibeReportCard } from "@/components/VibeReportCard";
 import { VibeReportForm } from "@/components/VibeReportForm";
 import { GoogleMapsButton } from "@/components/GoogleMapsButton";
 import { useLocationWatch } from "@/lib/useLocation";
-import { calculateDistance, formatDistance } from "@/lib/utils";
+import { calculateDistance, formatDistance, getVibeEmoji } from "@/lib/utils";
 
 export default function VenuePage() {
   const params = useParams();
@@ -141,16 +141,59 @@ export default function VenuePage() {
       <div className="mb-8">
         <div className="bg-card border border-border rounded-lg p-6">
           <h3 className="text-lg font-semibold mb-4">Vibe Statistics</h3>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-primary">156</div>
+              <div className="text-3xl font-bold text-primary">
+                {venue.aggregatedData?.totalVibes || 0}
+              </div>
               <div className="text-sm text-muted-foreground">Total Vibes</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-green-500">12</div>
+              <div className="text-3xl font-bold text-green-500">
+                {venue.aggregatedData?.vibesLastHour || 0}
+              </div>
               <div className="text-sm text-muted-foreground">Last Hour</div>
             </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-500">
+                {venue.aggregatedData?.averageCoverCharge ? `$${venue.aggregatedData.averageCoverCharge}` : 'N/A'}
+              </div>
+              <div className="text-sm text-muted-foreground">Avg Cover</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-orange-500">
+                {venue.aggregatedData?.averageQueueLength || 'N/A'}
+              </div>
+              <div className="text-sm text-muted-foreground">Avg Queue</div>
+            </div>
           </div>
+          
+          {/* Additional Stats */}
+          {venue.aggregatedData && (
+            <div className="mt-6 pt-6 border-t border-border">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Average Vibe:</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">{getVibeEmoji(venue.aggregatedData.averageVibeLevel)}</span>
+                    <span className="font-medium">{venue.aggregatedData.averageVibeLevel || 'N/A'}</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Top Genre:</span>
+                  <span className="font-medium">{venue.aggregatedData.mostCommonMusicGenre || 'N/A'}</span>
+                </div>
+                {venue.aggregatedData.lastVibeReportAt && (
+                  <div className="flex items-center justify-between md:col-span-2">
+                    <span className="text-sm text-muted-foreground">Last Report:</span>
+                    <span className="font-medium">
+                      {new Date(venue.aggregatedData.lastVibeReportAt).toLocaleString()}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

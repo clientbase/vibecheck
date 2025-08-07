@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { VibeLevel } from "@/lib/generated/prisma"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -32,5 +33,23 @@ export function formatDistance(distance: number): string {
     return `${distance.toFixed(1)}km`;
   } else {
     return `${Math.round(distance)}km`;
+  }
+}
+
+// Get emoji for vibe level
+export function getVibeEmoji(vibeLevel: VibeLevel | null | undefined): string {
+  if (!vibeLevel) return '😐';
+  
+  switch (vibeLevel) {
+    case VibeLevel.DEAD:
+      return '💀';
+    case VibeLevel.MID:
+      return '😐';
+    case VibeLevel.LIT:
+      return '🔥';
+    case VibeLevel.CHAOTIC:
+      return '🤪';
+    default:
+      return '😐';
   }
 }
