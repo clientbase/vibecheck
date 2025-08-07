@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useState, useEffect, useMemo } from "react";
 import { Venue, VibeReport } from "@/lib/types";
@@ -7,6 +8,7 @@ import { getVenueBySlug } from "@/lib/api";
 import { VibeReportCard } from "@/components/VibeReportCard";
 import { VibeReportForm } from "@/components/VibeReportForm";
 import { GoogleMapsButton } from "@/components/GoogleMapsButton";
+import { Header } from "@/components/Header";
 import { useLocationWatch } from "@/lib/useLocation";
 import { calculateDistance, formatDistance, getVibeEmoji } from "@/lib/utils";
 
@@ -64,15 +66,31 @@ export default function VenuePage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Loading venue...</div>
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <Image
+          src="/VibeCheckTO Logo Design Skyline Alpha.png"
+          alt="VibeCheckTO"
+          width={400}
+          height={120}
+          className="h-24 w-auto mb-6"
+          priority
+        />
+        <div className="text-lg text-muted-foreground">Loading venue...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <Image
+          src="/VibeCheckTO Logo Design Skyline Alpha.png"
+          alt="VibeCheckTO"
+          width={400}
+          height={120}
+          className="h-24 w-auto mb-6"
+          priority
+        />
         <div className="text-lg text-red-600">Error: {error}</div>
       </div>
     );
@@ -80,15 +98,25 @@ export default function VenuePage() {
 
   if (!venue) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <Image
+          src="/VibeCheckTO Logo Design Skyline Alpha.png"
+          alt="VibeCheckTO"
+          width={400}
+          height={120}
+          className="h-24 w-auto mb-6"
+          priority
+        />
         <div className="text-lg">Venue not found</div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Venue Header */}
+    <>
+      <Header />
+      <div className="container mx-auto px-4 py-8">
+        {/* Venue Header */}
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row items-start gap-6">
           {venue.coverPhotoUrl && (
@@ -219,5 +247,6 @@ export default function VenuePage() {
         )}
       </div>
     </div>
+    </>
   );
 } 
