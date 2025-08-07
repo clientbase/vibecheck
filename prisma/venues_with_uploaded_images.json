@@ -3,8 +3,8 @@
     "name": "The Velvet Underground",
     "slug": "the-velvet-underground",
     "address": "508 Queen St W, Toronto, ON",
-    "lat": 43.646336,
-    "lon": -79.399903,
+    "lat": 43.64804807424728,
+    "lon": -79.401519645173,
     "categories": [
       "hip-hop",
       "club"
@@ -15,11 +15,11 @@
     "updatedAt": "2025-08-05T15:11:18.846921"
   },
   {
-    "name": "Toybox",
-    "slug": "toybox",
+    "name": "DPRTMNT",
+    "slug": "dprtmnt",
     "address": "473 Adelaide St W, Toronto, ON M5V 1T1",
-    "lat": 43.644,
-    "lon": -79.3987,
+    "lat": 43.64534712793268,
+    "lon": -79.39983687116447,
     "categories": [
       "EDM",
       "Bottle Service"
@@ -33,8 +33,8 @@
     "name": "Rebel",
     "slug": "rebel",
     "address": "11 Polson St, Toronto, ON M5A 1A4",
-    "lat": 43.6419,
-    "lon": -79.3543,
+    "lat": 43.64100202730685,
+    "lon": -79.35458556051536,
     "categories": [
       "EDM",
       "Hip-Hop",
@@ -50,8 +50,8 @@
     "name": "Coda",
     "slug": "coda",
     "address": "794 Bathurst St, Toronto, ON",
-    "lat": 43.665374,
-    "lon": -79.4115403,
+    "lat": 43.66552314810926,
+    "lon": -79.41148233167888,
     "categories": [
       "latin",
       "dance"
@@ -65,8 +65,8 @@
     "name": "Lost and Found",
     "slug": "lost-and-found",
     "address": "577 King St W, Toronto, ON M5V 1M1",
-    "lat": 43.6432,
-    "lon": -79.3986,
+    "lat": 43.64507079208901,
+    "lon": -79.39949923958157,
     "categories": [
       "Hip-Hop",
       "Exclusive"
@@ -80,8 +80,8 @@
     "name": "The Drake Underground",
     "slug": "the-drake-underground",
     "address": "1150 Queen St W, Toronto, ON",
-    "lat": 43.6432545,
-    "lon": -79.424546,
+    "lat": 43.643351443966,
+    "lon": -79.42476356236394,
     "categories": [
       "rnb",
       "chill"
@@ -96,8 +96,8 @@
     "name": "Apartment 200",
     "slug": "apartment-200",
     "address": "1034 Queen St W, Toronto, ON",
-    "lat": 43.6440046,
-    "lon": -79.4202391,
+    "lat": 43.64421034750073,
+    "lon": -79.42022780284411,
     "categories": [
       "pop",
       "party"
@@ -108,27 +108,11 @@
     "updatedAt": "2025-08-05T15:11:18.848711"
   },
   {
-    "name": "Wildflower",
-    "slug": "wildflower",
-    "address": "550 Wellington St W, Toronto, ON M5V 2V5",
-    "lat": 43.6418,
-    "lon": -79.3971,
-    "categories": [
-      "Hip-Hop",
-      "Underground",
-      "Trendy"
-    ],
-    "isFeatured": false,
-    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/images/wildflower.png",
-    "createdAt": "2025-08-07T18:49:38.698014",
-    "updatedAt": "2025-08-07T18:49:38.698015"
-  },
-  {
     "name": "Lavelle",
     "slug": "lavelle",
     "address": "627 King St W, Toronto, ON M5V 1M5",
-    "lat": 43.6434,
-    "lon": -79.4023,
+    "lat": 43.64413574769355,
+    "lon": -79.40155698935072,
     "categories": [
       "Rooftop",
       "Lounge",
@@ -143,8 +127,8 @@
     "name": "Track & Field",
     "slug": "track-and-field",
     "address": "582 College St, Toronto, ON M6H 1A2",
-    "lat": 43.6543,
-    "lon": -79.4237,
+    "lat": 43.65560464276153,
+    "lon": -79.41335208935038,
     "categories": [
       "Games",
       "Casual",
@@ -159,8 +143,8 @@
     "name": "Petty Cash",
     "slug": "petty-cash",
     "address": "487 Adelaide St W, Toronto, ON M5V 1T4",
-    "lat": 43.6442,
-    "lon": -79.3981,
+    "lat": 43.645639152876655,
+    "lon": -79.40076770284409,
     "categories": [
       "Casual",
       "Dance",
