@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Upload, X, Image as ImageIcon, Camera } from "lucide-react";
+import { Upload, X, Image as ImageIcon, Camera, RotateCw } from "lucide-react";
 import { toast } from "sonner";
 
 interface ImageUploadProps {
@@ -15,7 +15,7 @@ interface ImageUploadProps {
 export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentImageUrl || null);
-  const [showCamera, setShowCamera] = useState(false);
+  const [rotation, setRotation] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
@@ -94,6 +94,7 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }
 
   const handleRemoveImage = () => {
     setPreviewUrl(null);
+    setRotation(0);
     onImageRemoved();
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -101,6 +102,10 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }
     if (cameraInputRef.current) {
       cameraInputRef.current.value = '';
     }
+  };
+
+  const handleRotateImage = () => {
+    setRotation((prev) => (prev + 90) % 360);
   };
 
   const handleCameraCapture = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -186,16 +191,27 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }
             src={previewUrl}
             alt="Preview"
             className="w-full rounded-lg border"
+            style={{ transform: `rotate(${rotation}deg)` }}
           />
-          <Button
-            type="button"
-            variant="destructive"
-            size="sm"
-            className="absolute top-2 right-2"
-            onClick={handleRemoveImage}
-          >
-            <X className="h-4 w-4" />
-          </Button>
+          <div className="absolute top-2 right-2 flex gap-1">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleRotateImage}
+              disabled={uploading}
+            >
+              <RotateCw className="h-4 w-4" />
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              size="sm"
+              onClick={handleRemoveImage}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       ) : (
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
