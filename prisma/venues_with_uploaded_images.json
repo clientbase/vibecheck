@@ -2,7 +2,7 @@
   {
     "name": "The Velvet Underground",
     "slug": "the-velvet-underground",
-    "address": "737 Queen St W, Toronto, ON",
+    "address": "508 Queen St W, Toronto, ON",
     "lat": 43.646336,
     "lon": -79.399903,
     "categories": [
@@ -49,7 +49,7 @@
     "id": "9116f1c0-8ec4-481b-bf5b-2c6cc9a00f97",
     "name": "Coda",
     "slug": "coda",
-    "address": "897 Queen St W, Toronto, ON",
+    "address": "794 Bathurst St, Toronto, ON",
     "lat": 43.648135,
     "lon": -79.402347,
     "categories": [
@@ -79,7 +79,7 @@
   {
     "name": "The Drake Underground",
     "slug": "the-drake-underground",
-    "address": "633 Queen St W, Toronto, ON",
+    "address": "1150 Queen St W, Toronto, ON",
     "lat": 43.647884,
     "lon": -79.404039,
     "categories": [
@@ -95,7 +95,7 @@
     "id": "347bd5d3-18f7-4d0a-8eb7-0656c2b2f512",
     "name": "Apartment 200",
     "slug": "apartment-200",
-    "address": "717 Queen St W, Toronto, ON",
+    "address": "1034 Queen St W, Toronto, ON",
     "lat": 43.649599,
     "lon": -79.401959,
     "categories": [
@@ -124,22 +124,6 @@
     "updatedAt": "2025-08-07T18:49:38.698015"
   },
   {
-    "id": "f7699f1d-8eac-4f3e-bf38-597617675394",
-    "name": "Love Child Social House",
-    "slug": "love-child-social-house",
-    "address": "926 Queen St W, Toronto, ON",
-    "lat": 43.643689,
-    "lon": -79.394774,
-    "categories": [
-      "trap",
-      "bass"
-    ],
-    "isFeatured": true,
-    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/images/love-child-social-house.webp",
-    "createdAt": "2025-08-05T15:11:18.849092",
-    "updatedAt": "2025-08-05T15:11:18.849093"
-  },
-  {
     "name": "Lavelle",
     "slug": "lavelle",
     "address": "627 King St W, Toronto, ON M5V 1M5",
@@ -158,7 +142,7 @@
   {
     "name": "Track & Field",
     "slug": "track-and-field",
-    "address": "860 College St, Toronto, ON M6H 1A2",
+    "address": "582 College St, Toronto, ON M6H 1A2",
     "lat": 43.6543,
     "lon": -79.4237,
     "categories": [
