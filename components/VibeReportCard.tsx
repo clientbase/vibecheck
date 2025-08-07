@@ -85,7 +85,7 @@ export function VibeReportCard({ report }: VibeReportCardProps) {
         </div>
       </CardHeader>
       
-      {(report.queueLength || report.coverCharge || report.musicGenre || report.notes || report.imageUrl) && (
+      {(report.notes || report.imageUrl) && (
         <CardContent className="space-y-3">
           {report.imageUrl && (
             <div className="mb-3">
@@ -97,7 +97,7 @@ export function VibeReportCard({ report }: VibeReportCardProps) {
             </div>
           )}
           
-          {(report.queueLength || report.coverCharge) && (
+          {/* {(report.queueLength || report.coverCharge) && (
             <div className="flex items-center justify-between">
               {report.queueLength && (
                 <div className="flex items-center gap-2">
@@ -120,7 +120,7 @@ export function VibeReportCard({ report }: VibeReportCardProps) {
               <span className="text-sm text-muted-foreground">Music:</span>
               <span className="font-medium">{report.musicGenre}</span>
             </div>
-          )}
+          )} */}
           
           {report.notes && (
             <div className="bg-muted/50 p-3 rounded-md">

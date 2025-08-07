@@ -154,7 +154,7 @@ export default function VenuePage() {
               </div>
               <div className="text-sm text-muted-foreground">Last Hour</div>
             </div>
-            <div className="text-center">
+            {/* <div className="text-center">
               <div className="text-3xl font-bold text-blue-500">
                 {venue.aggregatedData?.averageCoverCharge ? `$${venue.aggregatedData.averageCoverCharge}` : 'N/A'}
               </div>
@@ -165,7 +165,7 @@ export default function VenuePage() {
                 {venue.aggregatedData?.averageQueueLength || 'N/A'}
               </div>
               <div className="text-sm text-muted-foreground">Avg Queue</div>
-            </div>
+            </div> */}
           </div>
           
           {/* Additional Stats */}
@@ -179,10 +179,10 @@ export default function VenuePage() {
                     <span className="font-medium">{venue.aggregatedData.averageVibeLevel || 'N/A'}</span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between">
+                {/* <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Top Genre:</span>
                   <span className="font-medium">{venue.aggregatedData.mostCommonMusicGenre || 'N/A'}</span>
-                </div>
+                </div> */}
                 {venue.aggregatedData.lastVibeReportAt && (
                   <div className="flex items-center justify-between md:col-span-2">
                     <span className="text-sm text-muted-foreground">Last Report:</span>

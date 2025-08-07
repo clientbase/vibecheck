@@ -148,7 +148,7 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
               />
             </div>
 
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label htmlFor="queueLength">Queue Length</Label>
               <Select 
                 value={formData.queueLength} 
@@ -186,7 +186,7 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
                 value={formData.musicGenre}
                 onChange={(e) => handleInputChange("musicGenre", e.target.value)}
               />
-            </div>
+            </div> */}
 
             <ImageUpload
               onImageUploaded={handleImageUploaded}

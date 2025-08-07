@@ -70,7 +70,7 @@ export function VenueCard({ venue, onClick, distance }: VenueCardProps) {
           </div>
           
           {/* Cover & Line Info */}
-          <div className="flex flex-col items-end gap-1 text-xs text-muted-foreground">
+          {/* <div className="flex flex-col items-end gap-1 text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <span>💰</span>
               <span className="font-medium">
@@ -83,7 +83,7 @@ export function VenueCard({ venue, onClick, distance }: VenueCardProps) {
                 {venue.aggregatedData?.averageQueueLength || 'N/A'}
               </span>
             </div>
-          </div>
+          </div> */}
         </div>
       </CardContent>
       <CardFooter className="flex justify-between items-center">
