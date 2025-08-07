@@ -33,7 +33,7 @@ export function calculateVenueAggregatedData(vibeReports: VibeReport[]): VenueAg
 
   const validVibeReports = vibeReports.filter(report => report.vibeLevel);
   const averageVibeLevel = validVibeReports.length > 0
-    ? calculateAverageVibeLevel(validVibeReports.map(r => r.vibeLevel))
+    ? calculateAverageVibeLevel(validVibeReports.map(r => r.vibeLevel as string))
     : null;
 
   // Calculate average queue length
@@ -80,20 +80,20 @@ export function calculateVenueAggregatedData(vibeReports: VibeReport[]): VenueAg
   return {
     totalVibes: vibeReports.length,
     vibesLastHour,
-    averageVibeLevel,
-    averageQueueLength,
+    averageVibeLevel: averageVibeLevel,
+    averageQueueLength: averageQueueLength,
     averageCoverCharge: averageCoverCharge ? Math.round(averageCoverCharge * 100) / 100 : null,
     mostCommonMusicGenre,
     lastVibeReportAt,
   };
 }
 
-function calculateAverageVibeLevel(vibeLevels: VibeLevel[]): VibeLevel {
-  const vibeLevelValues = {
-    [VibeLevel.DEAD]: 1,
-    [VibeLevel.MID]: 2,
-    [VibeLevel.LIT]: 3,
-    [VibeLevel.CHAOTIC]: 4,
+function calculateAverageVibeLevel(vibeLevels: string[]): VibeLevel {
+  const vibeLevelValues: Record<string, number> = {
+    'DEAD': 1,
+    'MID': 2,
+    'LIT': 3,
+    'CHAOTIC': 4,
   };
 
   const total = vibeLevels.reduce((sum, level) => sum + vibeLevelValues[level], 0);

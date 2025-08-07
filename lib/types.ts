@@ -1,20 +1,8 @@
 // Types for Venues and Vibe Reports based on Prisma schema
 
-export enum VibeLevel {
-  DEAD = "DEAD",
-  MID = "MID", 
-  LIT = "LIT",
-  CHAOTIC = "CHAOTIC"
-}
-
-export enum QueueLength {
-  NONE = "NONE",
-  SHORT = "SHORT",
-  LONG = "LONG", 
-  INSANE = "INSANE"
-}
-
 import type { VibeLevel, QueueLength } from '@/lib/generated/prisma';
+
+export { VibeLevel, QueueLength };
 
 export interface VenueAggregatedData {
   totalVibes: number;
