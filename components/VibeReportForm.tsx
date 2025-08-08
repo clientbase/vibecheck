@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { submitVibeReport } from "@/lib/api";
 import { toast } from "sonner";
 import { ImageUpload } from "@/components/ImageUpload";
-import { VibeLevel, QueueLength } from "@/lib/constants";
+import { QueueLength } from "@/lib/constants";
 
 interface VibeReportFormProps {
   venueSlug: string;
@@ -44,7 +44,7 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
     
     try {
       const result = await submitVibeReport(venueSlug, {
-        vibeLevel: formData.vibeLevel as keyof typeof VibeLevel,
+        vibeLevel: Number(formData.vibeLevel),
         queueLength: formData.queueLength as keyof typeof QueueLength,
         coverCharge: formData.coverCharge ? parseInt(formData.coverCharge) : undefined,
         musicGenre: formData.musicGenre,
@@ -128,10 +128,10 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
                   <SelectValue placeholder="How was the vibe?" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={VibeLevel.DEAD}>💀 DEAD - No energy</SelectItem>
-                  <SelectItem value={VibeLevel.MID}>😐 MID - Okay vibes</SelectItem>
-                  <SelectItem value={VibeLevel.LIT}>🔥 LIT - Great energy</SelectItem>
-                  <SelectItem value={VibeLevel.CHAOTIC}>🤪 CHAOTIC - Wild night</SelectItem>
+                  <SelectItem value="1">💀 DEAD - No energy</SelectItem>
+                  <SelectItem value="2">😐 MID - Okay vibes</SelectItem>
+                  <SelectItem value="3">🔥 LIT - Great energy</SelectItem>
+                  <SelectItem value="4">🤪 CHAOTIC - Wild night</SelectItem>
                 </SelectContent>
               </Select>
             </div>

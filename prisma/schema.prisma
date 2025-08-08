@@ -53,7 +53,7 @@ model VibeReport {
   venueId       String
 
   submittedAt   DateTime     @default(now())
-  vibeLevel     VibeLevel
+  vibeLevel     Int
   queueLength   QueueLength?
   coverCharge   Int?
   musicGenre    String?

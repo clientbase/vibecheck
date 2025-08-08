@@ -25,7 +25,7 @@ export async function getVenueBySlug(slug: string): Promise<Venue> {
 export async function submitVibeReport(
   slug: string, 
   data: {
-    vibeLevel: string;
+    vibeLevel: number;
     queueLength?: string;
     coverCharge?: number;
     musicGenre?: string;
@@ -36,7 +36,7 @@ export async function submitVibeReport(
   success: boolean;
   vibeReport: {
     id: string;
-    vibeLevel: string;
+    vibeLevel: number;
     queueLength: string;
     coverCharge: number;
     musicGenre: string;

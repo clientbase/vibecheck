@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { VibeLevel } from "@/lib/generated/prisma"
+import { getVibeDescriptor } from "@/lib/vibe-map"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -36,20 +36,15 @@ export function formatDistance(distance: number): string {
   }
 }
 
-// Get emoji for vibe level
-export function getVibeEmoji(vibeLevel: VibeLevel | null | undefined): string {
-  if (!vibeLevel) return '😐';
-  
-  switch (vibeLevel) {
-    case VibeLevel.DEAD:
-      return '💀';
-    case VibeLevel.MID:
-      return '😐';
-    case VibeLevel.LIT:
-      return '🔥';
-    case VibeLevel.CHAOTIC:
-      return '🤪';
-    default:
-      return '😐';
-  }
+// Get emoji/label/color for numeric vibe level
+export function getVibeEmoji(vibeLevel?: number | null): string {
+  return getVibeDescriptor(vibeLevel ?? null).emoji;
+}
+
+export function getVibeLabel(vibeLevel?: number | null): string {
+  return getVibeDescriptor(vibeLevel ?? null).label;
+}
+
+export function getVibeColorClass(vibeLevel?: number | null): string {
+  return getVibeDescriptor(vibeLevel ?? null).colorClass;
 }

@@ -10,7 +10,7 @@ import { VibeReportForm } from "@/components/VibeReportForm";
 import { GoogleMapsButton } from "@/components/GoogleMapsButton";
 import { Header } from "@/components/Header";
 import { useLocationWatch } from "@/lib/useLocation";
-import { calculateDistance, formatDistance, getVibeEmoji } from "@/lib/utils";
+import { calculateDistance, formatDistance, getVibeEmoji, getVibeLabel } from "@/lib/utils";
 
 export default function VenuePage() {
   const params = useParams();
@@ -204,7 +204,7 @@ export default function VenuePage() {
                   <span className="text-sm text-muted-foreground">Average Vibe:</span>
                   <div className="flex items-center gap-2">
                     <span className="text-2xl">{getVibeEmoji(venue.aggregatedData.averageVibeLevel)}</span>
-                    <span className="font-medium">{venue.aggregatedData.averageVibeLevel || 'N/A'}</span>
+                    <span className="font-medium">{getVibeLabel(venue.aggregatedData.averageVibeLevel) || 'N/A'}</span>
                   </div>
                 </div>
                 {/* <div className="flex items-center justify-between">

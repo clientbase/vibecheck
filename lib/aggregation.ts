@@ -1,6 +1,6 @@
 import { VenueAggregatedData } from './types';
 import type { VibeReport } from '@/lib/generated/prisma';
-import { VibeLevel, QueueLength } from '@/lib/generated/prisma';
+import { QueueLength } from '@/lib/generated/prisma';
 
 export function calculateVenueAggregatedData(vibeReports: VibeReport[]): VenueAggregatedData {
   if (vibeReports.length === 0) {
@@ -23,17 +23,10 @@ export function calculateVenueAggregatedData(vibeReports: VibeReport[]): VenueAg
     report => new Date(report.submittedAt) >= oneHourAgo
   ).length;
 
-  // Calculate average vibe level
-  const vibeLevelValues = {
-    [VibeLevel.DEAD]: 1,
-    [VibeLevel.MID]: 2,
-    [VibeLevel.LIT]: 3,
-    [VibeLevel.CHAOTIC]: 4,
-  };
-
-  const validVibeReports = vibeReports.filter(report => report.vibeLevel);
+  // Calculate average vibe level (numeric)
+  const validVibeReports = vibeReports.filter(report => typeof report.vibeLevel === 'number');
   const averageVibeLevel = validVibeReports.length > 0
-    ? calculateAverageVibeLevel(validVibeReports.map(r => r.vibeLevel as string))
+    ? Math.round((validVibeReports.reduce((sum, r) => sum + (r.vibeLevel as unknown as number), 0) / validVibeReports.length) * 100) / 100
     : null;
 
   // Calculate average queue length
@@ -86,24 +79,6 @@ export function calculateVenueAggregatedData(vibeReports: VibeReport[]): VenueAg
     mostCommonMusicGenre,
     lastVibeReportAt,
   };
-}
-
-function calculateAverageVibeLevel(vibeLevels: string[]): VibeLevel {
-  const vibeLevelValues: Record<string, number> = {
-    'DEAD': 1,
-    'MID': 2,
-    'LIT': 3,
-    'CHAOTIC': 4,
-  };
-
-  const total = vibeLevels.reduce((sum, level) => sum + vibeLevelValues[level], 0);
-  const average = total / vibeLevels.length;
-
-  // Map back to vibe level
-  if (average <= 1.5) return VibeLevel.DEAD;
-  if (average <= 2.5) return VibeLevel.MID;
-  if (average <= 3.5) return VibeLevel.LIT;
-  return VibeLevel.CHAOTIC;
 }
 
 function calculateAverageQueueLength(queueLengths: QueueLength[]): QueueLength {

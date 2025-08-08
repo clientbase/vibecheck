@@ -78,13 +78,11 @@ export async function POST(
       );
     }
     
-    // Validate enum values
-    const validVibeLevels = ['DEAD', 'MID', 'LIT', 'CHAOTIC'];
+    // Validate values
     const validQueueLengths = ['NONE', 'SHORT', 'LONG', 'INSANE'];
-    
-    if (!validVibeLevels.includes(vibeLevel)) {
+    if (typeof vibeLevel !== 'number' || vibeLevel < 1 || vibeLevel > 5) {
       return NextResponse.json(
-        { error: 'Invalid vibeLevel. Must be one of: DEAD, MID, LIT, CHAOTIC' },
+        { error: 'Invalid vibeLevel. Must be a number between 1 and 5' },
         { status: 400 }
       );
     }
@@ -130,7 +128,7 @@ export async function POST(
     const vibeReport = await prisma.vibeReport.create({
       data: {
         venueId: venue.id,
-        vibeLevel,
+        vibeLevel: Number(vibeLevel),
         queueLength: queueLength || null,
         coverCharge: coverCharge || null,
         musicGenre: musicGenre || null,

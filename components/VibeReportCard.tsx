@@ -1,6 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { VibeReport } from "@/lib/types";
-import { VibeLevel, QueueLength, VibeLevelType, QueueLengthType } from "@/lib/constants";
+import { QueueLength, QueueLengthType } from "@/lib/constants";
+import { getVibeDescriptor } from "@/lib/vibe-map";
 
 type VibeReportCardProps = {
   report: VibeReport;
@@ -29,16 +30,6 @@ export function VibeReportCard({ report }: VibeReportCardProps) {
     }
   };
 
-  const getVibeLevelColor = (level: VibeLevelType) => {
-    switch (level) {
-      case VibeLevel.DEAD: return "text-red-500";
-      case VibeLevel.MID: return "text-yellow-500";
-      case VibeLevel.LIT: return "text-green-500";
-      case VibeLevel.CHAOTIC: return "text-purple-500";
-      default: return "text-gray-500";
-    }
-  };
-
   const getQueueLengthColor = (length: QueueLengthType) => {
     switch (length) {
       case QueueLength.NONE: return "text-green-500";
@@ -49,15 +40,7 @@ export function VibeReportCard({ report }: VibeReportCardProps) {
     }
   };
 
-  const getVibeLevelIcon = (level: VibeLevelType) => {
-    switch (level) {
-      case VibeLevel.DEAD: return "💀";
-      case VibeLevel.MID: return "😐";
-      case VibeLevel.LIT: return "🔥";
-      case VibeLevel.CHAOTIC: return "🤪";
-      default: return "🎵";
-    }
-  };
+  const vibe = getVibeDescriptor(report.vibeLevel as unknown as number);
 
   const getQueueLengthIcon = (length: QueueLengthType) => {
     switch (length) {
@@ -74,9 +57,9 @@ export function VibeReportCard({ report }: VibeReportCardProps) {
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
-            <span className="text-2xl">{getVibeLevelIcon(report.vibeLevel)}</span>
-            <span className={getVibeLevelColor(report.vibeLevel)}>
-              {report.vibeLevel}
+            <span className="text-2xl">{vibe.emoji}</span>
+            <span className={vibe.colorClass}>
+              {vibe.label}
             </span>
           </CardTitle>
           <div className="text-sm text-muted-foreground">

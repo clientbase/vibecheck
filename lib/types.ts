@@ -1,13 +1,13 @@
 // Types for Venues and Vibe Reports based on Prisma schema
 
-import type { VibeLevel, QueueLength } from '@/lib/generated/prisma';
+import type { QueueLength } from '@/lib/generated/prisma';
 
-export { VibeLevel, QueueLength };
+export { QueueLength };
 
 export interface VenueAggregatedData {
   totalVibes: number;
   vibesLastHour: number;
-  averageVibeLevel: VibeLevel | null;
+  averageVibeLevel: number | null;
   averageQueueLength: QueueLength | null;
   averageCoverCharge: number | null;
   mostCommonMusicGenre: string | null;
@@ -36,7 +36,7 @@ export interface VibeReport {
   venueId: string;
   venue?: Venue;
   submittedAt: Date;
-  vibeLevel: VibeLevel;
+  vibeLevel: number; // 1..N representing intensity
   queueLength?: QueueLength | null;
   coverCharge?: number | null;
   musicGenre?: string | null;
@@ -73,7 +73,7 @@ export interface CreateVenueData {
 
 export interface CreateVibeReportData {
   venueId: string;
-  vibeLevel: VibeLevel;
+  vibeLevel: number;
   queueLength?: QueueLength;
   coverCharge?: number;
   musicGenre?: string;
@@ -92,7 +92,7 @@ export interface VenueFilters {
 
 export interface VibeReportFilters {
   venueId?: string;
-  vibeLevel?: VibeLevel[];
+  vibeLevel?: number[];
   queueLength?: QueueLength[];
   dateFrom?: Date;
   dateTo?: Date;

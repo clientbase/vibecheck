@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Venue } from "@/lib/types";
-import { formatDistance, getVibeEmoji } from "@/lib/utils";
+import { formatDistance, getVibeEmoji, getVibeLabel } from "@/lib/utils";
 import { GoogleMapsButton } from "@/components/GoogleMapsButton";
 
 type VenueCardProps = {
@@ -52,7 +52,7 @@ export function VenueCard({ venue, onClick, distance }: VenueCardProps) {
         <div className="flex flex-col items-center mb-3">
           <span className="text-4xl">{getVibeEmoji(venue.aggregatedData?.averageVibeLevel)}</span>
           <span className="text-sm font-medium text-muted-foreground mt-1">
-            {venue.aggregatedData?.averageVibeLevel || 'N/A'}
+            {getVibeLabel(venue.aggregatedData?.averageVibeLevel) || 'N/A'}
           </span>
         </div>
         
