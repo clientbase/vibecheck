@@ -9,10 +9,11 @@ import { toast } from "sonner";
 interface ImageUploadProps {
   onImageUploaded: (imageUrl: string) => void;
   onImageRemoved: () => void;
+  onUploadingChange?: (uploading: boolean) => void;
   currentImageUrl?: string | null;
 }
 
-export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }: ImageUploadProps) {
+export function ImageUpload({ onImageUploaded, onImageRemoved, onUploadingChange, currentImageUrl }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentImageUrl || null);
   const [showCamera, setShowCamera] = useState(false);
@@ -56,6 +57,7 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }
 
     // Upload file
     setUploading(true);
+    onUploadingChange?.(true);
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -89,6 +91,7 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }
       setPreviewUrl(null);
     } finally {
       setUploading(false);
+      onUploadingChange?.(false);
     }
   };
 
@@ -140,6 +143,7 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }
 
     // Upload file
     setUploading(true);
+    onUploadingChange?.(true);
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -173,6 +177,7 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, currentImageUrl }
       setPreviewUrl(null);
     } finally {
       setUploading(false);
+      onUploadingChange?.(false);
     }
   };
 

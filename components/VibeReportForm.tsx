@@ -20,6 +20,7 @@ interface VibeReportFormProps {
 export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
   const [formData, setFormData] = useState({
     vibeLevel: "",
     queueLength: "",
@@ -191,6 +192,7 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
             <ImageUpload
               onImageUploaded={handleImageUploaded}
               onImageRemoved={handleImageRemoved}
+              onUploadingChange={setImageUploading}
               currentImageUrl={formData.imageUrl}
             />
           </form>
@@ -198,10 +200,10 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
           <DrawerFooter className="pb-safe">
             <Button 
               onClick={handleSubmit} 
-              disabled={loading}
+              disabled={loading || imageUploading}
               className="w-full"
             >
-              {loading ? "Submitting..." : "Submit Report"}
+              {imageUploading ? "Uploading image..." : (loading ? "Submitting..." : "Submit Report")}
             </Button>
             <Button 
               variant="outline" 
