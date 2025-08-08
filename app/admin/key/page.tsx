@@ -42,7 +42,7 @@ export default function AdminKeyPage() {
             <div className="space-y-2">
               <Label htmlFor="adminkey">Enter your admin API key</Label>
               <Input id="adminkey" type="password" value={key} onChange={(e) => setKey(e.target.value)} placeholder="••••••••" />
-              <p className="text-xs text-muted-foreground">Stored only in your browser's local storage.</p>
+              <p className="text-xs text-muted-foreground">Stored only in your browser&rsquo;s local storage.</p>
             </div>
             <div className="flex gap-2 justify-end">
               <Button variant="secondary" type="button" onClick={handleClear}>Clear</Button>

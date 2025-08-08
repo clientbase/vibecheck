@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { calculateVenueAggregatedData } from '@/lib/aggregation';
 import { put } from '@vercel/blob';
-import { ADMIN_HEADER, isValidAdminRequest } from '@/lib/admin';
+import { isValidAdminRequest } from '@/lib/admin';
 
 export async function GET() {
   try {
@@ -107,7 +107,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'name and address are required' }, { status: 400 });
     }
 
-    let slug = body.slug?.trim() || slugify(name);
+    const slug = body.slug?.trim() || slugify(name);
     if (!slug) {
       return NextResponse.json({ error: 'Unable to derive slug from name' }, { status: 400 });
     }
