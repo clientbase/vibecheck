@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { calculateVenueAggregatedData } from '@/lib/aggregation';
 import { put } from '@vercel/blob';
+import { isValidAdminRequest } from '@/lib/admin';
 
 export async function GET(
   request: Request,
@@ -54,6 +55,17 @@ type UpdateVenueBody = {
   coverImageUrl?: string; // Optional remote image to download and store
 };
 
+type UpdateData = {
+  name?: string;
+  slug?: string;
+  address?: string;
+  categories?: string[];
+  isFeatured?: boolean;
+  lat?: number;
+  lon?: number;
+  coverPhotoUrl?: string;
+};
+
 async function geocodeAddress(address: string) {
   const apiKey = process.env.GOOGLE_MAPS_API_KEY;
   if (!apiKey) throw new Error('Missing GOOGLE_MAPS_API_KEY');
@@ -83,6 +95,9 @@ export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  if (!isValidAdminRequest(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers: { 'www-authenticate': 'api-key' } });
+  }
   const { slug } = await params;
   try {
     const venue = await prisma.venue.findUnique({ where: { slug } });
@@ -90,7 +105,7 @@ export async function PATCH(
 
     const body = (await request.json()) as UpdateVenueBody;
 
-    let updateData: any = {};
+    const updateData: UpdateData = {};
 
     if (body.name !== undefined) updateData.name = body.name;
     if (body.isFeatured !== undefined) updateData.isFeatured = Boolean(body.isFeatured);
@@ -137,6 +152,9 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  if (!isValidAdminRequest(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers: { 'www-authenticate': 'api-key' } });
+  }
   const { slug } = await params;
   try {
     const venue = await prisma.venue.findUnique({ where: { slug } });

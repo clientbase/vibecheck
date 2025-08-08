@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { calculateVenueAggregatedData } from '@/lib/aggregation';
 import { put } from '@vercel/blob';
+import { ADMIN_HEADER, isValidAdminRequest } from '@/lib/admin';
 
 export async function GET() {
   try {
@@ -96,6 +97,9 @@ async function uploadImageFromUrl(remoteUrl: string, slug: string): Promise<stri
 }
 
 export async function POST(request: Request) {
+  if (!isValidAdminRequest(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers: { 'www-authenticate': 'api-key' } });
+  }
   try {
     const body = (await request.json()) as CreateVenueBody;
     const { name, address } = body;

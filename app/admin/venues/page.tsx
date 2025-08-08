@@ -9,6 +9,7 @@ import { VenueForm } from "@/components/admin/VenueForm";
 import type { Venue } from "@/lib/types";
 import { toast } from "sonner";
 import Link from "next/link";
+import { withAdminHeader } from "@/lib/admin-client";
 
 export default function AdminVenuesPage() {
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -38,7 +39,7 @@ export default function AdminVenuesPage() {
   const handleDelete = async (slug: string) => {
     if (!confirm('Delete this venue? This will also delete its vibe reports.')) return;
     try {
-      const res = await fetch(`/api/venues/${slug}`, { method: 'DELETE' });
+      const res = await fetch(`/api/venues/${slug}`, withAdminHeader({ method: 'DELETE' }));
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to delete venue');
       toast.success('Venue deleted');

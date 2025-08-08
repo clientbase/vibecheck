@@ -9,6 +9,7 @@ import { ImageUpload } from "@/components/ImageUpload";
 import { toast } from "sonner";
 import type { Venue } from "@/lib/types";
 import { DialogClose } from "@/components/ui/dialog";
+import { withAdminHeader } from "@/lib/admin-client";
 
 export type VenueFormMode = "create" | "edit";
 
@@ -46,7 +47,7 @@ export function VenueForm({ mode, initial, onSuccess, onCancel }: VenueFormProps
     setLoading(true);
     try {
       if (mode === "create") {
-        const res = await fetch("/api/venues", {
+        const res = await fetch("/api/venues", withAdminHeader({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -60,14 +61,14 @@ export function VenueForm({ mode, initial, onSuccess, onCancel }: VenueFormProps
             isFeatured,
             coverImageUrl: coverImageUrl || undefined,
           }),
-        });
+        }));
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Failed to create venue");
         toast.success("Venue created", { description: `${data.name} has been created.` });
         onSuccess?.(data as Venue);
       } else {
         if (!initial?.slug) throw new Error("Missing venue identifier for update");
-        const res = await fetch(`/api/venues/${initial.slug}`, {
+        const res = await fetch(`/api/venues/${initial.slug}`, withAdminHeader({
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -81,7 +82,7 @@ export function VenueForm({ mode, initial, onSuccess, onCancel }: VenueFormProps
             isFeatured,
             coverImageUrl: coverImageUrl || undefined,
           }),
-        });
+        }));
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Failed to update venue");
         toast.success("Venue updated", { description: `${data.name} has been updated.` });

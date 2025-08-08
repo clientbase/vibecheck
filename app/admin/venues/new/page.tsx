@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ImageUpload } from "@/components/ImageUpload";
+import { withAdminHeader } from "@/lib/admin-client";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -28,7 +29,7 @@ export default function NewVenuePage() {
     setSuccess(null);
 
     try {
-      const res = await fetch("/api/venues", {
+      const res = await fetch("/api/venues", withAdminHeader({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -42,7 +43,7 @@ export default function NewVenuePage() {
           isFeatured,
           coverImageUrl: coverImageUrl || undefined,
         }),
-      });
+      }));
 
       const data = await res.json();
       if (!res.ok) {
