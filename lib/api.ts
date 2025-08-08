@@ -31,6 +31,7 @@ export async function submitVibeReport(
     musicGenre?: string;
     notes?: string;
     imageUrl?: string;
+    deviceId?: string;
   }
 ): Promise<{
   success: boolean;

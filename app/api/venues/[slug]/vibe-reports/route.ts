@@ -1,25 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getRedis } from '@/lib/redis';
 
 // Rate limiting configuration
 const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour in milliseconds
-const MAX_REPORTS_PER_WINDOW = 3; // Maximum 3 reports per hour per IP
+const MAX_REPORTS_PER_WINDOW = 3; // Maximum per hour per device/user
 
 interface RateLimitInfo {
   count: number;
   resetTime: number;
 }
 
-// In-memory store for rate limiting (in production, use Redis)
+// In-memory fallback store for rate limiting (used if Redis unavailable)
 const rateLimitStore = new Map<string, RateLimitInfo>();
 
-function checkRateLimit(ip: string): { allowed: boolean; remaining: number; resetTime: number } {
+async function checkRateLimit(key: string): Promise<{ allowed: boolean; remaining: number; resetTime: number }> {
   const now = Date.now();
-  const rateLimitInfo = rateLimitStore.get(ip);
+  const redis = await getRedis();
+  if (redis) {
+    const ttlSeconds = Math.ceil(RATE_LIMIT_WINDOW / 1000);
+    const redisKey = `rl:${key}`;
+    // increment counter and set expiry on first increment
+    const count = await redis.incr(redisKey);
+    if (count === 1) {
+      await redis.expire(redisKey, ttlSeconds);
+    }
+    const ttl = await redis.ttl(redisKey);
+    if (count > MAX_REPORTS_PER_WINDOW) {
+      return { allowed: false, remaining: 0, resetTime: now + (ttl > 0 ? ttl * 1000 : RATE_LIMIT_WINDOW) };
+    }
+    return { allowed: true, remaining: MAX_REPORTS_PER_WINDOW - count, resetTime: now + (ttl > 0 ? ttl * 1000 : RATE_LIMIT_WINDOW) };
+  }
+
+  // Fallback to in-memory when Redis not available
+  const rateLimitInfo = rateLimitStore.get(key);
   
   if (!rateLimitInfo || now > rateLimitInfo.resetTime) {
     // Reset rate limit
-    rateLimitStore.set(ip, {
+    rateLimitStore.set(key, {
       count: 1,
       resetTime: now + RATE_LIMIT_WINDOW
     });
@@ -32,7 +50,7 @@ function checkRateLimit(ip: string): { allowed: boolean; remaining: number; rese
   
   // Increment count
   rateLimitInfo.count++;
-  rateLimitStore.set(ip, rateLimitInfo);
+  rateLimitStore.set(key, rateLimitInfo);
   
   return { 
     allowed: true, 
@@ -50,10 +68,11 @@ export async function POST(
     
     // Parse request body
     const body = await request.json();
-    const { vibeLevel, queueLength, coverCharge, musicGenre, notes, imageUrl, clientIP } = body;
+    const { vibeLevel, queueLength, coverCharge, musicGenre, notes, imageUrl, clientIP, deviceId } = body;
     
-    // Check rate limit
-    const rateLimit = checkRateLimit(clientIP);
+    // Check rate limit (prefer deviceId, else fallback to IP)
+    const limiterKey = (deviceId && typeof deviceId === 'string' && deviceId.length > 0) ? `dev:${deviceId}` : `ip:${clientIP}`;
+    const rateLimit = await checkRateLimit(limiterKey);
     if (!rateLimit.allowed) {
       return NextResponse.json(
         { 
@@ -109,8 +128,10 @@ export async function POST(
     // Get geo hint from headers (if available)
     const geoHint = request.headers.get('x-vercel-ip-country') || null;
     
-    // Generate anonymous user ID (fingerprint based on IP + User Agent)
-    const userAnonId = Buffer.from(`${clientIP}-${userAgent}`).toString('base64').slice(0, 16);
+    // Generate anonymous user ID (deviceId preferred, then IP+UA)
+    const userAnonId = (deviceId && typeof deviceId === 'string')
+      ? deviceId
+      : Buffer.from(`${clientIP}-${userAgent}`).toString('base64').slice(0, 16);
     
     // Find the venue
     const venue = await prisma.venue.findUnique({

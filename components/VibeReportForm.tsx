@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { ImageUpload } from "@/components/ImageUpload";
 import { QueueLength } from "@/lib/constants";
 import { VIBE_LEVELS } from "@/lib/vibe-map";
+import { getOrCreateDeviceId } from "@/lib/client-id";
 
 interface VibeReportFormProps {
   venueSlug: string;
@@ -52,6 +53,7 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
         musicGenre: formData.musicGenre,
         notes: formData.notes || undefined,
         imageUrl: formData.imageUrl || undefined,
+        deviceId: getOrCreateDeviceId() || undefined,
       });
 
       toast.success("Vibe Report Submitted!", {
