@@ -17,8 +17,7 @@ export async function getRedis(): Promise<RedisClient | null> {
     return redisSingleton;
   }
   try {
-    const mod = await import('ioredis');
-    const IORedis = (mod as any).default || (mod as any);
+    const { default: IORedis } = await import('ioredis');
     // ioredis accepts a connection string
     redisSingleton = new IORedis(url, {
       maxRetriesPerRequest: 2,
