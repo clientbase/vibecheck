@@ -15,7 +15,7 @@ export type VenueFormMode = "create" | "edit";
 
 export interface VenueFormProps {
   mode: VenueFormMode;
-  initial?: Partial<Venue> & { coverPhotoUrl?: string };
+  initial?: Partial<Venue>;
   onSuccess?: (venue: Venue) => void;
   onCancel?: () => void;
 }
@@ -26,7 +26,7 @@ export function VenueForm({ mode, initial, onSuccess, onCancel }: VenueFormProps
   const [address, setAddress] = useState(initial?.address ?? "");
   const [categories, setCategories] = useState<string>((initial?.categories ?? []).join(", "));
   const [isFeatured, setIsFeatured] = useState<boolean>(Boolean(initial?.isFeatured));
-  const [coverImageUrl, setCoverImageUrl] = useState<string>(initial?.coverPhotoUrl ?? "");
+  const [coverImageUrl, setCoverImageUrl] = useState<string>((initial as any)?.coverPhotoUrl ?? "");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export function VenueForm({ mode, initial, onSuccess, onCancel }: VenueFormProps
       setAddress(initial.address ?? "");
       setCategories((initial.categories ?? []).join(", "));
       setIsFeatured(Boolean(initial.isFeatured));
-      setCoverImageUrl(initial.coverPhotoUrl ?? "");
+      setCoverImageUrl((initial as any).coverPhotoUrl ?? "");
     }
   }, [initial]);
 
