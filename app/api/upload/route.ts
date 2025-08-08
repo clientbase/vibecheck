@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
-import { tmpdir } from 'os';
+
+export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,20 +32,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Convert file to buffer
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    // Convert file to buffer (ensure Buffer type matches sharp's expectations)
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    let buffer: Buffer = Buffer.from(bytes);
+    let outContentType = file.type || 'image/jpeg';
+
+    // Server-side optimize with sharp if available
+    try {
+      const sharpMod = await import('sharp');
+      const sharp = sharpMod.default || (sharpMod as any);
+      const pipeline = sharp(buffer)
+        .rotate()
+        .resize({ width: 1024, height: 1024, fit: 'inside', withoutEnlargement: true });
+      // Prefer JPEG for compatibility
+      buffer = await pipeline.jpeg({ quality: 75, mozjpeg: true }).toBuffer();
+      outContentType = 'image/jpeg';
+    } catch (e) {
+      // sharp not installed or failed — fall back to original buffer
+    }
 
     // Generate unique filename
     const timestamp = Date.now();
     const randomString = Math.random().toString(36).substring(2, 15);
-    const extension = file.name.split('.').pop() || 'jpg';
+    const originalExt = (file.name.split('.').pop() || '').toLowerCase();
+    const extension = outContentType.includes('jpeg') || outContentType.includes('jpg') ? 'jpg' : (originalExt || 'jpg');
     const filename = `vibe-reports/${timestamp}-${randomString}.${extension}`;
 
     // Upload to Vercel Blob Store
     const blob = await put(filename, buffer, {
       access: 'public',
       addRandomSuffix: false,
+      contentType: outContentType,
     });
 
     return NextResponse.json({

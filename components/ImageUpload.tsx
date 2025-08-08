@@ -20,6 +20,39 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, onUploadingChange
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
+  // Downscale large images on the client to reduce upload size
+  const downscaleImage = async (file: File): Promise<Blob> => {
+    return await new Promise((resolve) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        const maxWidth = 1600; // mobile-friendly target width
+        const scale = Math.min(1, maxWidth / img.width);
+        const targetW = Math.max(1, Math.round(img.width * scale));
+        const targetH = Math.max(1, Math.round(img.height * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = targetW;
+        canvas.height = targetH;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          URL.revokeObjectURL(url);
+          resolve(file);
+          return;
+        }
+        ctx.drawImage(img, 0, 0, targetW, targetH);
+        canvas.toBlob((blob) => {
+          URL.revokeObjectURL(url);
+          resolve(blob || file);
+        }, 'image/jpeg', 0.7);
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        resolve(file);
+      };
+      img.src = url;
+    });
+  };
+
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -59,8 +92,9 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, onUploadingChange
     setUploading(true);
     onUploadingChange?.(true);
     try {
+      const optimized = await downscaleImage(file);
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', new File([optimized], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
 
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -145,8 +179,9 @@ export function ImageUpload({ onImageUploaded, onImageRemoved, onUploadingChange
     setUploading(true);
     onUploadingChange?.(true);
     try {
+      const optimized = await downscaleImage(file);
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', new File([optimized], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
 
       const response = await fetch('/api/upload', {
         method: 'POST',
