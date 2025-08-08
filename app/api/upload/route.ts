@@ -39,8 +39,7 @@ export async function POST(request: NextRequest) {
 
     // Server-side optimize with sharp if available
     try {
-      const sharpMod = await import('sharp');
-      const sharp = sharpMod.default || (sharpMod as any);
+      const { default: sharp } = await import('sharp');
       const pipeline = sharp(buffer)
         .rotate()
         .resize({ width: 1024, height: 1024, fit: 'inside', withoutEnlargement: true });
