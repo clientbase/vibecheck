@@ -26,7 +26,7 @@ export function VenueForm({ mode, initial, onSuccess, onCancel }: VenueFormProps
   const [address, setAddress] = useState(initial?.address ?? "");
   const [categories, setCategories] = useState<string>((initial?.categories ?? []).join(", "));
   const [isFeatured, setIsFeatured] = useState<boolean>(Boolean(initial?.isFeatured));
-  const [coverImageUrl, setCoverImageUrl] = useState<string>((initial as any)?.coverPhotoUrl ?? "");
+  const [coverImageUrl, setCoverImageUrl] = useState<string>(initial?.coverPhotoUrl ?? "");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export function VenueForm({ mode, initial, onSuccess, onCancel }: VenueFormProps
       setAddress(initial.address ?? "");
       setCategories((initial.categories ?? []).join(", "));
       setIsFeatured(Boolean(initial.isFeatured));
-      setCoverImageUrl((initial as any).coverPhotoUrl ?? "");
+      setCoverImageUrl(initial.coverPhotoUrl ?? "");
     }
   }, [initial]);
 
