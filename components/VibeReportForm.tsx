@@ -11,6 +11,7 @@ import { submitVibeReport } from "@/lib/api";
 import { toast } from "sonner";
 import { ImageUpload } from "@/components/ImageUpload";
 import { QueueLength } from "@/lib/constants";
+import { VIBE_LEVELS } from "@/lib/vibe-map";
 
 interface VibeReportFormProps {
   venueSlug: string;
@@ -129,10 +130,11 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
                   <SelectValue placeholder="How was the vibe?" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">💀 DEAD - No energy</SelectItem>
-                  <SelectItem value="2">😐 MID - Okay vibes</SelectItem>
-                  <SelectItem value="3">🔥 LIT - Great energy</SelectItem>
-                  <SelectItem value="4">🤪 CHAOTIC - Wild night</SelectItem>
+                  {Object.entries(VIBE_LEVELS).map(([level, d]) => (
+                    <SelectItem key={level} value={String(level)}>
+                      {d.emoji} {d.label} - {d.description}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
