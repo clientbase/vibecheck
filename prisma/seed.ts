@@ -35,7 +35,6 @@ async function main() {
       },
     });
   }
-
   // console.log(`Seeding ${vibeReports.length} vibe reports...`);
   // for (const report of vibeReports) {
   //   await prisma.vibeReport.upsert({
@@ -47,10 +46,13 @@ async function main() {
   //       coverCharge: report.coverCharge,
   //       musicGenre: report.musicGenre,
   //       notes: report.notes,
+  //       imageUrl: report.imageUrl ?? null,
   //       ipAddress: report.ipAddress,
   //       userAgent: report.userAgent,
   //       geoHint: report.geoHint,
   //       userAnonId: report.userAnonId,
+  //       userId: report.userId ?? null,
+  //       flagged: report.flagged ?? false,
   //     },
   //     create: {
   //       id: report.id,
@@ -61,10 +63,14 @@ async function main() {
   //       coverCharge: report.coverCharge,
   //       musicGenre: report.musicGenre,
   //       notes: report.notes,
+  //       imageUrl: report.imageUrl ?? null,
   //       ipAddress: report.ipAddress,
   //       userAgent: report.userAgent,
-  //       geoHint: report.geoHint,
+   
+  //    geoHint: report.geoHint,
   //       userAnonId: report.userAnonId,
+  //       userId: report.userId ?? null,
+  //       flagged: report.flagged ?? false,
   //     },
   //   });
   // }
