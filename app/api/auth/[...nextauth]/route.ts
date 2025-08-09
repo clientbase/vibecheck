@@ -33,7 +33,7 @@ export const authOptions = {
     async session({ session, user, token }: { session: Session; user?: AdapterUser; token?: JWT }) {
       if (user) {
         session.user.id = user.id;
-        session.user.role = (user as any).role || "user";
+        session.user.role = (user as AdapterUser & { role?: string }).role || "user";
       }
       if (token && session.user) {
         session.user.id = token.id as string;
