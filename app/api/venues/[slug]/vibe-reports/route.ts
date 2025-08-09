@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getRedis } from '@/lib/redis';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 // Rate limiting configuration
 const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour in milliseconds
@@ -70,6 +72,13 @@ export async function POST(
     const body = await request.json();
     const { vibeLevel, queueLength, coverCharge, musicGenre, notes, imageUrl, clientIP, deviceId } = body;
     
+    // Check for logged-in user
+    const session = await getServerSession(authOptions);
+    let userId: string | undefined = undefined;
+    if (session?.user?.id) {
+      userId = session.user.id;
+    }
+
     // Check rate limit (prefer deviceId, else fallback to IP)
     const limiterKey = (deviceId && typeof deviceId === 'string' && deviceId.length > 0) ? `dev:${deviceId}` : `ip:${clientIP}`;
     const rateLimit = await checkRateLimit(limiterKey);
@@ -129,7 +138,7 @@ export async function POST(
     const geoHint = request.headers.get('x-vercel-ip-country') || null;
     
     // Generate anonymous user ID (deviceId preferred, then IP+UA)
-    const userAnonId = (deviceId && typeof deviceId === 'string')
+    const userAnonId = userId ? null : (deviceId && typeof deviceId === 'string')
       ? deviceId
       : Buffer.from(`${clientIP}-${userAgent}`).toString('base64').slice(0, 16);
     
@@ -159,6 +168,7 @@ export async function POST(
         userAgent,
         geoHint,
         userAnonId,
+        userId,
         flagged: false,
       },
       include: {

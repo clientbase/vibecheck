@@ -65,5 +65,59 @@ model VibeReport {
   geoHint       String?      // Browser-based or derived from IP
 
   userAnonId    String?      // Optional: Fingerprinted session or device ID
+  userId        String?      // Optional: Authenticated user ID
+  user          User?        @relation(fields: [userId], references: [id])
   flagged       Boolean      @default(false)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          String?   @default("user")
+  passwordHash  String?
+
+  accounts      Account[]
+  sessions      Session[]
+  vibeReports   VibeReport[] // Add this line for the relation
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }

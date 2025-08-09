@@ -2,16 +2,38 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+function Header({ session }: { session: any }) {
+  return (
+    <header className="w-full flex items-center justify-between px-4 py-2 border-b bg-background">
+      <Link href="/" className="font-bold text-lg">VibeCheckTO</Link>
+      <div>
+        {!session?.user ? (
+          <Button asChild>
+            <Link href="/signin">Sign In</Link>
+          </Button>
+        ) : (
+          <div className="flex items-center gap-2">
+            {session.user.image && (
+              <img src={session.user.image} alt="User avatar" className="w-8 h-8 rounded-full" />
+            )}
+            <span className="font-medium">{session.user.name || session.user.email}</span>
+            <form action="/api/auth/signout" method="post">
+              <Button type="submit" variant="outline" size="sm">Sign Out</Button>
+            </form>
+          </div>
+        )}
+      </div>
+    </header>
+  );
+}
 
 export const metadata: Metadata = {
   title: "VibeCheckTO | What's the Vibe in Toronto Tonight?",
@@ -48,11 +70,12 @@ export const metadata: Metadata = {
   publisher: "VibeCheckTO",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions);
   return (
     <html lang="en" className="dark">
       <head>
@@ -64,6 +87,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
+        <Header session={session} />
         {children}
         <Toaster />
       </body>
