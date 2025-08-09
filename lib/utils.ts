@@ -48,3 +48,15 @@ export function getVibeLabel(vibeLevel?: number | null): string {
 export function getVibeColorClass(vibeLevel?: number | null): string {
   return getVibeDescriptor(vibeLevel ?? null).colorClass;
 }
+
+// Human-readable time since a given date
+export function timeSince(input: Date | string): string {
+  const now = new Date();
+  const d = new Date(input);
+  const diffSec = Math.max(0, Math.floor((now.getTime() - d.getTime()) / 1000));
+  if (diffSec < 60) return 'Just now';
+  if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m ago`;
+  if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h ago`;
+  if (diffSec < 2592000) return `${Math.floor(diffSec / 86400)}d ago`;
+  return `${Math.floor(diffSec / 2592000)}mo ago`;
+}

@@ -14,8 +14,11 @@ export const VIBE_LEVELS: Record<number, VibeDescriptor> = {
 };
 
 export function getVibeDescriptor(level?: number | null): VibeDescriptor {
-  if (!level) return { label: 'UNKNOWN', emoji: '🎵', colorClass: 'text-gray-500', description: 'Unknown vibe' };
-  return VIBE_LEVELS[level] || { label: `LEVEL ${level}`, emoji: '🎵', colorClass: 'text-gray-500', description: 'Unknown vibe' };
+  if (level == null) return { label: 'UNKNOWN', emoji: '🎵', colorClass: 'text-gray-500', description: 'Unknown vibe' };
+  const min = 1;
+  const max = Math.max(...Object.keys(VIBE_LEVELS).map((k) => Number(k)));
+  const idx = Math.min(max, Math.max(min, Math.round(level)));
+  return VIBE_LEVELS[idx] || { label: `LEVEL ${idx}`, emoji: '🎵', colorClass: 'text-gray-500', description: 'Unknown vibe' };
 }
 
 

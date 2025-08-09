@@ -10,7 +10,7 @@ import { VibeReportForm } from "@/components/VibeReportForm";
 import { GoogleMapsButton } from "@/components/GoogleMapsButton";
 import { Header } from "@/components/Header";
 import { useLocationWatch } from "@/lib/useLocation";
-import { calculateDistance, formatDistance, getVibeEmoji, getVibeLabel } from "@/lib/utils";
+import { calculateDistance, formatDistance, getVibeEmoji, getVibeLabel, timeSince } from "@/lib/utils";
 
 export default function VenuePage() {
   const params = useParams();
@@ -214,9 +214,7 @@ export default function VenuePage() {
                 {venue.aggregatedData.lastVibeReportAt && (
                   <div className="flex items-center justify-between md:col-span-2">
                     <span className="text-sm text-muted-foreground">Last Report:</span>
-                    <span className="font-medium">
-                      {new Date(venue.aggregatedData.lastVibeReportAt).toLocaleString()}
-                    </span>
+                    <span className="font-medium">{timeSince(venue.aggregatedData.lastVibeReportAt)}</span>
                   </div>
                 )}
               </div>
