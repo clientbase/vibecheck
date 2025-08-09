@@ -4,8 +4,8 @@ import fs from 'fs';
 const prisma = new PrismaClient();
 
 async function main() {
-  const venues = JSON.parse(fs.readFileSync('./prisma/venues.json', 'utf8'));
-  const vibeReports = JSON.parse(fs.readFileSync('./prisma/vibeReports.json', 'utf8'));
+  const venues = JSON.parse(fs.readFileSync('./db-dump/venues.json', 'utf8'));
+  const vibeReports = JSON.parse(fs.readFileSync('./db-dump/vibeReports.json', 'utf8'));
 
   console.log(`Seeding ${venues.length} venues...`);
   for (const venue of venues) {
