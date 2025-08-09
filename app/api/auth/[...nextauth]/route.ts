@@ -3,9 +3,11 @@ import { authOptions } from "./authOptions";
 
 const handler = NextAuth(authOptions);
 
-export async function GET(request: Request, ctx: { params?: Record<string, unknown> }) {
-  return handler(request, ctx);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function GET(request: Request, context: any) {
+  return handler(request, context);
 }
-export async function POST(request: Request, ctx: { params?: Record<string, unknown> }) {
-  return handler(request, ctx);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function POST(request: Request, context: any) {
+  return handler(request, context);
 }
