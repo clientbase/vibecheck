@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isValidAdminRequest } from '@/lib/admin';
+import type { Prisma } from '@/lib/generated/prisma';
 
 // List vibe reports with venue info for admin. Supports optional query params: flagged, limit, offset
 export async function GET(request: Request) {
@@ -12,7 +13,7 @@ export async function GET(request: Request) {
   const limit = Number(searchParams.get('limit') || 50);
   const offset = Number(searchParams.get('offset') || 0);
 
-  const where: any = {};
+  const where: Prisma.VibeReportWhereInput = {};
   if (flaggedParam === 'true') where.flagged = true;
   if (flaggedParam === 'false') where.flagged = false;
 
