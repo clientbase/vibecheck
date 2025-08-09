@@ -9,6 +9,7 @@ export async function GET() {
     const venues = await prisma.venue.findMany({
       include: {
         vibeReports: {
+          where: { flagged: false },
           orderBy: {
             submittedAt: 'desc',
           },

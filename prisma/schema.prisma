@@ -65,4 +65,5 @@ model VibeReport {
   geoHint       String?      // Browser-based or derived from IP
 
   userAnonId    String?      // Optional: Fingerprinted session or device ID
+  flagged       Boolean      @default(false)
 }

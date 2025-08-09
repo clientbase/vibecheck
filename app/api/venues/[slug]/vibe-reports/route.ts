@@ -159,6 +159,7 @@ export async function POST(
         userAgent,
         geoHint,
         userAnonId,
+        flagged: false,
       },
       include: {
         venue: {

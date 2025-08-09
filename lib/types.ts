@@ -46,6 +46,7 @@ export interface VibeReport {
   userAgent?: string | null;
   geoHint?: string | null; // Browser-based or derived from IP
   userAnonId?: string | null; // Optional: Fingerprinted session or device ID
+  flagged?: boolean; // Soft-delete flag
 }
 
 // API Response types

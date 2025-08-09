@@ -16,6 +16,7 @@ export async function GET(
       },
       include: {
         vibeReports: {
+          where: { flagged: false },
           orderBy: {
             submittedAt: 'desc',
           },

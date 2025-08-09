@@ -26,15 +26,17 @@ CREATE TABLE "public"."VibeReport" (
     "id" TEXT NOT NULL,
     "venueId" TEXT NOT NULL,
     "submittedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "vibeLevel" "public"."VibeLevel" NOT NULL,
+    "vibeLevel" INTEGER NOT NULL,
     "queueLength" "public"."QueueLength",
     "coverCharge" INTEGER,
     "musicGenre" TEXT,
     "notes" TEXT,
+    "imageUrl" TEXT,
     "ipAddress" TEXT,
     "userAgent" TEXT,
     "geoHint" TEXT,
     "userAnonId" TEXT,
+    "flagged" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "VibeReport_pkey" PRIMARY KEY ("id")
 );
