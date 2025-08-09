@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
@@ -45,12 +46,4 @@ export const authOptions = {
 };
 
 const handler = NextAuth(authOptions);
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function GET(req: Request, ctx: Record<string, unknown>) {
-  return handler(req, ctx);
-}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function POST(req: Request, ctx: Record<string, unknown>) {
-  return handler(req, ctx);
-}
+export { handler as GET, handler as POST };
