@@ -1,6 +1,6 @@
 // Types for Venues and Vibe Reports based on Prisma schema
 
-import type { QueueLength } from '@/lib/generated/prisma';
+import type { QueueLength } from '@prisma/client';
 
 export { QueueLength };
 

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isValidAdminRequest } from '@/lib/admin';
-import type { Prisma } from '@/lib/generated/prisma';
+import type { Prisma } from '@prisma/client';
 
 // List vibe reports with venue info for admin. Supports optional query params: flagged, limit, offset
 export async function GET(request: Request) {

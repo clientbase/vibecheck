@@ -1,6 +1,6 @@
 import { VenueAggregatedData } from './types';
-import type { VibeReport } from '@/lib/generated/prisma';
-import { QueueLength } from '@/lib/generated/prisma';
+import type { VibeReport } from '@prisma/client';
+import { QueueLength } from '@prisma/client';
 
 export function calculateVenueAggregatedData(vibeReports: VibeReport[]): VenueAggregatedData {
   if (vibeReports.length === 0) {
