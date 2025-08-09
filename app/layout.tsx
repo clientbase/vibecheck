@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import type { Session } from "next-auth";
 
 const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
-function Header({ session }: { session: any }) {
+function Header({ session }: { session: Session | null }) {
   return (
     <header className="w-full flex items-center justify-between px-4 py-2 border-b bg-background">
       <Link href="/" className="font-bold text-lg">VibeCheckTO</Link>

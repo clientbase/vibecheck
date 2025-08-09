@@ -32,12 +32,12 @@ export const authOptions = {
   callbacks: {
     async session({ session, user, token }: { session: Session; user?: AdapterUser; token?: JWT }) {
       if (user) {
-        (session.user as any).id = user.id;
-        (session.user as any).role = (user as any).role || "user";
+        session.user.id = user.id;
+        session.user.role = (user as any).role || "user";
       }
       if (token && session.user) {
-        (session.user as any).id = (token as any).id;
-        (session.user as any).role = (token as any).role || "user";
+        session.user.id = token.id as string;
+        session.user.role = (token.role as string) || "user";
       }
       return session;
     },
