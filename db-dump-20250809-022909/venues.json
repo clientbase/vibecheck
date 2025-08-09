@@ -1,0 +1,361 @@
+[
+  {
+    "id": "1a38e05e-5d27-41b3-8598-75ed0144835d",
+    "name": "The Velvet Underground",
+    "slug": "the-velvet-underground",
+    "address": "508 Queen St W, Toronto, ON",
+    "lat": 43.647867,
+    "lon": -79.4014961,
+    "categories": [
+      "hip-hop",
+      "club"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/images/the-velvet-underground.jpg",
+    "createdAt": "2025-08-05T19:11:18.846Z",
+    "updatedAt": "2025-08-05T19:11:18.846Z"
+  },
+  {
+    "id": "6ce59f2f-fd11-4c79-a721-849e073db5e5",
+    "name": "Coda",
+    "slug": "coda",
+    "address": "794 Bathurst St, Toronto, ON",
+    "lat": 43.665399,
+    "lon": -79.4114716,
+    "categories": [
+      "latin",
+      "dance"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/images/coda.webp",
+    "createdAt": "2025-08-05T19:11:18.847Z",
+    "updatedAt": "2025-08-05T19:11:18.847Z"
+  },
+  {
+    "id": "22a547f5-ce1a-4d23-961b-30ec57f9b494",
+    "name": "The Drake Underground",
+    "slug": "the-drake-underground",
+    "address": "1150 Queen St W, Toronto, ON",
+    "lat": 43.6432497,
+    "lon": -79.4246963,
+    "categories": [
+      "rnb",
+      "chill"
+    ],
+    "isFeatured": true,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/images/the-drake-underground.jpg",
+    "createdAt": "2025-08-05T19:11:18.848Z",
+    "updatedAt": "2025-08-05T19:11:18.848Z"
+  },
+  {
+    "id": "9f92b6cb-50ba-455c-b3de-be24f1b0cdcc",
+    "name": "Apartment 200",
+    "slug": "apartment-200",
+    "address": "1034 Queen St W, Toronto, ON",
+    "lat": 43.6440642,
+    "lon": -79.42021749999999,
+    "categories": [
+      "pop",
+      "party"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/images/apartment-200.jpg",
+    "createdAt": "2025-08-05T19:11:18.848Z",
+    "updatedAt": "2025-08-05T19:11:18.848Z"
+  },
+  {
+    "id": "a6868525-cb40-4e70-9f91-6dcfe5ff44f2",
+    "name": "Rebel",
+    "slug": "rebel",
+    "address": "11 Polson St, Toronto, ON M5A 1A4",
+    "lat": 43.6407774,
+    "lon": -79.3545752,
+    "categories": [
+      "EDM",
+      "Hip-Hop",
+      "Mega Club"
+    ],
+    "isFeatured": true,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/images/rebel.net/medias/REBEL-Toronto",
+    "createdAt": "2025-08-07T22:49:38.697Z",
+    "updatedAt": "2025-08-07T22:49:38.698Z"
+  },
+  {
+    "id": "9dc0808a-18e8-491f-87fe-7b0b82959f83",
+    "name": "Lost and Found",
+    "slug": "lost-and-found",
+    "address": "577 King St W, Toronto, ON M5V 1M1",
+    "lat": 43.6443686,
+    "lon": -79.3996657,
+    "categories": [
+      "Hip-Hop",
+      "Exclusive"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/images/lost-and-found.jpg",
+    "createdAt": "2025-08-07T22:49:38.698Z",
+    "updatedAt": "2025-08-07T22:49:38.698Z"
+  },
+  {
+    "id": "8eaa7bae-84a9-4bc8-b2bb-8e0c6e635a60",
+    "name": "DPRTMNT",
+    "slug": "dprtmnt",
+    "address": "473 Adelaide St W, Toronto, ON M5V 1T1",
+    "lat": 43.645627,
+    "lon": -79.39995569999999,
+    "categories": [
+      "EDM",
+      "Bottle Service"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/images/toybox.jpg",
+    "createdAt": "2025-08-07T22:49:38.698Z",
+    "updatedAt": "2025-08-07T22:49:38.698Z"
+  },
+  {
+    "id": "74309f67-9c46-4dab-9f1a-33fc1a88d1fc",
+    "name": "Petty Cash",
+    "slug": "petty-cash",
+    "address": "487 Adelaide St W, Toronto, ON M5V 1T4",
+    "lat": 43.6454675,
+    "lon": -79.4008097,
+    "categories": [
+      "Casual",
+      "Dance",
+      "Hip-Hop"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/images/petty-cash.jpg",
+    "createdAt": "2025-08-07T22:49:38.698Z",
+    "updatedAt": "2025-08-07T22:49:38.698Z"
+  },
+  {
+    "id": "13cdbab0-a935-46af-a6f5-7ccfab4d258f",
+    "name": "Lavelle",
+    "slug": "lavelle",
+    "address": "627 King St W, Toronto, ON M5V 1M5",
+    "lat": 43.6437993,
+    "lon": -79.4013308,
+    "categories": [
+      "Rooftop",
+      "Lounge",
+      "Trendy"
+    ],
+    "isFeatured": true,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/images/lavelle.jpg",
+    "createdAt": "2025-08-07T22:49:38.698Z",
+    "updatedAt": "2025-08-07T22:49:38.698Z"
+  },
+  {
+    "id": "ffeedb2f-89fb-45e8-ad20-425807c1e625",
+    "name": "Track & Field",
+    "slug": "track-and-field",
+    "address": "582 College St, Toronto, ON M6H 1A2",
+    "lat": 43.65560464276153,
+    "lon": -79.41335208935038,
+    "categories": [
+      "Games",
+      "Casual",
+      "Social"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/images/track-and-field.jpg",
+    "createdAt": "2025-08-07T22:49:38.698Z",
+    "updatedAt": "2025-08-07T22:49:38.698Z"
+  },
+  {
+    "id": "91dd6f23-be6b-4a60-9062-8d6442f8a60d",
+    "name": "Future",
+    "slug": "future",
+    "address": "570 Queen St W, Toronto, ON M5V 2B5",
+    "lat": 43.6475694,
+    "lon": -79.4036115,
+    "categories": [
+      "hip-hop"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/venues/future-1754715601626.jpeg",
+    "createdAt": "2025-08-09T05:00:01.714Z",
+    "updatedAt": "2025-08-09T05:00:01.714Z"
+  },
+  {
+    "id": "c755bc44-5c08-4ceb-9089-bf822851a01f",
+    "name": "Ballers",
+    "slug": "ballers",
+    "address": "560 Queen St W, Toronto ON",
+    "lat": 43.6476307,
+    "lon": -79.4033331,
+    "categories": [],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/venues/ballers-1754715819177.jpeg",
+    "createdAt": "2025-08-09T05:03:39.266Z",
+    "updatedAt": "2025-08-09T05:03:39.266Z"
+  },
+  {
+    "id": "e76f9599-b7c1-4f5e-8edd-1cf8c713e4a3",
+    "name": "DND",
+    "slug": "dnd",
+    "address": "550 Queen St W, Toronto ON",
+    "lat": 43.6476717,
+    "lon": -79.4029917,
+    "categories": [
+      "RnB",
+      "hip-hop"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/venues/dnd-1754716162228.jpeg",
+    "createdAt": "2025-08-09T05:09:22.369Z",
+    "updatedAt": "2025-08-09T05:09:22.369Z"
+  },
+  {
+    "id": "da68a373-4006-4a5b-9721-ab48ee2726f1",
+    "name": "Bovine Sex Club",
+    "slug": "bovine-sex-club",
+    "address": "542 Queen St W, Toronto ON",
+    "lat": 43.64762959999999,
+    "lon": -79.4027409,
+    "categories": [
+      "Rock",
+      "Punk"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/venues/bovine-sex-club-1754716660417.jpeg",
+    "createdAt": "2025-08-09T05:17:40.519Z",
+    "updatedAt": "2025-08-09T05:17:40.519Z"
+  },
+  {
+    "id": "f9cb04a6-210f-4707-9aab-2b3bd511cf2f",
+    "name": "Bar Karma",
+    "slug": "bar-karma",
+    "address": "512 Queen St W, Toronto ON",
+    "lat": 43.647897,
+    "lon": -79.4016098,
+    "categories": [
+      "hip-hop"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/venues/bar-karma-1754716882387.jpeg",
+    "createdAt": "2025-08-09T05:21:22.462Z",
+    "updatedAt": "2025-08-09T05:21:22.462Z"
+  },
+  {
+    "id": "7537cb41-0adc-4b9d-88a7-a923b3cdb74b",
+    "name": "Primadonna",
+    "slug": "primadonna",
+    "address": "600 King St W, Toronto ON",
+    "lat": 43.6445933,
+    "lon": -79.3998668,
+    "categories": [],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/venues/primadonna-1754717442553.jpeg",
+    "createdAt": "2025-08-09T05:30:42.674Z",
+    "updatedAt": "2025-08-09T05:30:42.674Z"
+  },
+  {
+    "id": "99200d3e-08d7-4ca5-8d86-b3d6b1f17004",
+    "name": "Greta",
+    "slug": "greta",
+    "address": "590 King St W, Toronto ON",
+    "lat": 43.6447161,
+    "lon": -79.39957439999999,
+    "categories": [
+      "pop",
+      "hip-hop",
+      "dance hall"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/venues/greta-1754717620461.jpeg",
+    "createdAt": "2025-08-09T05:33:40.598Z",
+    "updatedAt": "2025-08-09T05:33:40.598Z"
+  },
+  {
+    "id": "48cc3319-932e-4f5c-b9c7-d811b5ff2a5f",
+    "name": "Century",
+    "slug": "century",
+    "address": "580 King St W, Toronto ON",
+    "lat": 43.6448331,
+    "lon": -79.3993854,
+    "categories": [
+      "pop"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/venues/century-1754717896707.jpeg",
+    "createdAt": "2025-08-09T05:38:16.865Z",
+    "updatedAt": "2025-08-09T05:38:16.865Z"
+  },
+  {
+    "id": "62d7389f-7edf-4208-95e1-ed738c6cd537",
+    "name": "Belfast Love",
+    "slug": "belfast-love",
+    "address": "548 King St W, Toronto ON",
+    "lat": 43.6448878,
+    "lon": -79.3979806,
+    "categories": [
+      "pop"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/venues/bellfast-love-1754718178930.jpeg",
+    "createdAt": "2025-08-09T05:42:25.406Z",
+    "updatedAt": "2025-08-09T05:42:59.010Z"
+  },
+  {
+    "id": "2305a3a5-dfd2-4ea8-a6fd-206aaa1f10ab",
+    "name": "Paris Texas",
+    "slug": "paris-texas",
+    "address": "461 King St W, Toronto, ON",
+    "lat": 43.6444565,
+    "lon": -79.3960904,
+    "categories": [
+      "country"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/venues/paris-texas-1754718515400.jpeg",
+    "createdAt": "2025-08-09T05:48:35.504Z",
+    "updatedAt": "2025-08-09T05:48:35.504Z"
+  },
+  {
+    "id": "f1eede24-e7ea-4ceb-8496-1e5e06f53657",
+    "name": "Mademoiselle",
+    "slug": "mademoiselle",
+    "address": "563 King St W, Toronto ON",
+    "lat": 43.6444041,
+    "lon": -79.3992024,
+    "categories": [
+      "house"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/venues/mademoiselle-1754718878423.jpeg",
+    "createdAt": "2025-08-09T05:54:38.500Z",
+    "updatedAt": "2025-08-09T05:54:38.500Z"
+  },
+  {
+    "id": "236f9901-6250-4a0f-bf0d-7686057051c8",
+    "name": "44  Toronto",
+    "slug": "44-toronto",
+    "address": "627 King St W, Toronto",
+    "lat": 43.6437993,
+    "lon": -79.4013308,
+    "categories": [
+      "hip-hop"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/venues/44-toronto-1754719238551.jpeg",
+    "createdAt": "2025-08-09T06:00:38.650Z",
+    "updatedAt": "2025-08-09T06:00:38.650Z"
+  },
+  {
+    "id": "e24434aa-db38-498a-b1f0-cea4609d3ab7",
+    "name": "416 Snack Bar",
+    "slug": "snack-bar",
+    "address": "181 Bathurst St, Toronto ON",
+    "lat": 43.6475522,
+    "lon": -79.4038839,
+    "categories": [
+      "bar"
+    ],
+    "isFeatured": false,
+    "coverPhotoUrl": "https://6ztzdxzkhufqlyn3.public.blob.vercel-storage.com/venues/snack-bar-1754720154710.jpeg",
+    "createdAt": "2025-08-09T06:14:42.105Z",
+    "updatedAt": "2025-08-09T06:15:54.805Z"
+  }
+]
