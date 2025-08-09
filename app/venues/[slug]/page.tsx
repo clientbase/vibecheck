@@ -8,7 +8,6 @@ import { getVenueBySlug } from "@/lib/api";
 import { VibeReportCard } from "@/components/VibeReportCard";
 import { VibeReportForm } from "@/components/VibeReportForm";
 import { GoogleMapsButton } from "@/components/GoogleMapsButton";
-import { Header } from "@/components/Header";
 import { useLocationWatch } from "@/lib/useLocation";
 import { calculateDistance, formatDistance, getVibeEmoji, getVibeLabel, timeSince } from "@/lib/utils";
 import { toast } from "sonner";
@@ -137,7 +136,7 @@ export default function VenuePage() {
 
   return (
     <>
-      <Header />
+      {/* <Header /> removed, global header is used */}
       <div className="container mx-auto px-4 py-8">
         {/* Venue Header */}
       <div className="mb-8">
@@ -185,6 +184,13 @@ export default function VenuePage() {
               </span>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Submit Vibe Report Section - moved above Vibe Stats */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-6" onClickCapture={handleFormOpenClickCapture}>
+          <VibeReportForm venueSlug={venue.slug} venueName={venue.name} />
         </div>
       </div>
 
@@ -246,11 +252,8 @@ export default function VenuePage() {
         </div>
       </div>
 
-      {/* Submit Vibe Report Section */}
+      {/* Recent Vibe Reports Section */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-6" onClickCapture={handleFormOpenClickCapture}>
-          <VibeReportForm venueSlug={venue.slug} venueName={venue.name} />
-        </div>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">Recent Vibe Reports</h2>
         </div>

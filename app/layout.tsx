@@ -7,6 +7,8 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import type { Session } from "next-auth";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
@@ -14,7 +16,10 @@ const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono"
 function Header({ session }: { session: Session | null }) {
   return (
     <header className="w-full flex items-center justify-between px-4 py-2 border-b bg-background">
-      <Link href="/" className="font-bold text-lg">VibeCheckTO</Link>
+      <Link href="/" className="flex items-center gap-2 font-bold text-lg">
+        <img src="/Smiling Emoji with CN Tower.png" alt="VibeCheckTO Logo" className="w-16 h-16 rounded" />
+        VibeCheckTO
+      </Link>
       <div>
         {!session?.user ? (
           <Button asChild>
@@ -22,13 +27,24 @@ function Header({ session }: { session: Session | null }) {
           </Button>
         ) : (
           <div className="flex items-center gap-2">
-            {session.user.image && (
-              <img src={session.user.image} alt="User avatar" className="w-8 h-8 rounded-full" />
-            )}
-            <span className="font-medium">{session.user.name || session.user.email}</span>
-            <form action="/api/auth/signout" method="post">
-              <Button type="submit" variant="outline" size="sm">Sign Out</Button>
-            </form>
+            <span className="text-base font-medium text-foreground max-w-[140px] truncate">{session.user.name || session.user.email}</span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="focus:outline-none flex items-center">
+                  <Avatar className="w-10 h-10">
+                    <AvatarImage src={session.user.image || undefined} alt="User avatar" className="w-10 h-10" />
+                    <AvatarFallback>{session.user.name ? session.user.name[0] : "U"}</AvatarFallback>
+                  </Avatar>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <form action="/api/auth/signout" method="post">
+                  <DropdownMenuItem asChild>
+                    <button type="submit" className="w-full text-left">Sign Out</button>
+                  </DropdownMenuItem>
+                </form>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         )}
       </div>

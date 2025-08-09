@@ -8,7 +8,6 @@ import { useState, useEffect, useMemo } from "react";
 import { getVenues } from "@/lib/api";
 import { useLocationWatch } from "@/lib/useLocation";
 import { calculateDistance } from "@/lib/utils";
-import { Header } from "@/components/Header";
 
 export default function Home() {
   const router = useRouter();
@@ -103,7 +102,7 @@ export default function Home() {
 
   return (
     <>
-      <Header />
+      {/* <Header /> removed, global header is used */}
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {venuesWithDistance.map((venue) => (
