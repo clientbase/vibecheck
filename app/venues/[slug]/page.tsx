@@ -11,6 +11,7 @@ import { GoogleMapsButton } from "@/components/GoogleMapsButton";
 import { Header } from "@/components/Header";
 import { useLocationWatch } from "@/lib/useLocation";
 import { calculateDistance, formatDistance, getVibeEmoji, getVibeLabel, timeSince } from "@/lib/utils";
+import { toast } from "sonner";
 
 export default function VenuePage() {
   const params = useParams();
@@ -61,6 +62,28 @@ export default function VenuePage() {
     
     return calculateDistance(location.latitude, location.longitude, venue.lat, venue.lon);
   }, [location, venue, locationObtained]);
+
+  const maxDistanceKm: number = (() => {
+    const raw = process.env.NEXT_PUBLIC_VIBEREPORT_MAX_KM || '0.5';
+    const parsed = parseFloat(raw);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 0.5;
+  })();
+
+  const handleFormOpenClickCapture = (e: React.SyntheticEvent) => {
+    if (!locationObtained || !location) {
+      e.preventDefault();
+      e.stopPropagation();
+      toast.error('Location Required', { description: 'You must allow location to post a vibe.' });
+      return;
+    }
+    if (typeof distance === 'number' && distance > maxDistanceKm) {
+      e.preventDefault();
+      e.stopPropagation();
+      const km = maxDistanceKm.toFixed(maxDistanceKm < 1 ? 2 : 1);
+      toast.error('Too far from venue', { description: `You must be within ${km} km to post a vibe.` });
+      return;
+    }
+  };
 
 
 
@@ -225,7 +248,7 @@ export default function VenuePage() {
 
       {/* Submit Vibe Report Section */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6" onClickCapture={handleFormOpenClickCapture}>
           <VibeReportForm venueSlug={venue.slug} venueName={venue.name} />
         </div>
         <div className="flex items-center justify-between mb-6">
@@ -240,7 +263,9 @@ export default function VenuePage() {
         ) : (
           <div className="text-center py-8 text-gray-500">
             <p className="mb-4">No vibe reports yet. Be the first to report the vibe!</p>
-            <VibeReportForm venueSlug={venue.slug} venueName={venue.name} />
+            <div className="flex items-center justify-center" onClickCapture={handleFormOpenClickCapture}>
+              <VibeReportForm venueSlug={venue.slug} venueName={venue.name} />
+            </div>
           </div>
         )}
       </div>
