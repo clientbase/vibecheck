@@ -15,6 +15,15 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [initialFetchDone, setInitialFetchDone] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState('night club bar');
+  const [searchRadius, setSearchRadius] = useState(5000);
+
+  const handleSearch = () => {
+    if (location) {
+      fetchVenues(location.latitude, location.longitude);
+    }
+  };
   
   // Location hook - watch for location changes
   const { location, error: locationError, loading: locationLoading, getLocation } = useLocationWatch({
@@ -29,7 +38,7 @@ export default function Home() {
       setLoading(true);
       const data = await getVenues(
         lat !== undefined && lon !== undefined 
-          ? { lat, lon, query: 'night club bar', radius: 5000 } // 5km radius
+          ? { lat, lon, query: searchQuery, radius: searchRadius } // 5km radius
           : undefined
       );
       setVenues(data.venues);
@@ -105,6 +114,33 @@ export default function Home() {
     <>
       {/* <Header /> removed, global header is used */}
       <div className="container mx-auto px-4 py-8">
+        {/* Search Controls */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold mb-4">Adjust Search Parameters</h3>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search Query"
+              className="border border-gray-300 rounded-lg px-3 py-2 w-full sm:w-auto"
+            />
+            <input
+              type="number"
+              value={searchRadius}
+              onChange={(e) => setSearchRadius(Number(e.target.value))}
+              placeholder="Radius (meters)"
+              className="border border-gray-300 rounded-lg px-3 py-2 w-full sm:w-auto"
+            />
+            <button
+              onClick={handleSearch}
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg w-full sm:w-auto"
+            >
+              Search
+            </button>
+          </div>
+        </div>
+
         {locationLoading && (
           <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <div className="text-sm text-blue-700">
