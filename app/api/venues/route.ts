@@ -62,6 +62,10 @@ export async function GET(request: Request) {
       });
       console.log('Fetched DB venues:', dbVenues);
 
+      if (!Array.isArray(dbVenues)) {
+        throw new Error('dbVenues is not an array');
+      }
+
       // Get venues from Google Places
       let googlePlaces: GooglePlace[] = [];
       try {
@@ -70,6 +74,10 @@ export async function GET(request: Request) {
       } catch (error) {
         console.warn('Google Places API error:', error);
         // Continue with just DB results if Google API fails
+      }
+
+      if (!Array.isArray(googlePlaces)) {
+        throw new Error('googlePlaces is not an array');
       }
 
       // Combine and deduplicate results
