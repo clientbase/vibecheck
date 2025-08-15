@@ -18,13 +18,12 @@ export function GoogleMapsButton({
 }: GoogleMapsButtonProps) {
   const handleOpenMaps = () => {
     let mapsUrl: string;
-    
+    const encodedAddress = encodeURIComponent(address);
     if (placeId) {
       // Use Place ID for direct venue link
-      mapsUrl = `https://www.google.com/maps/place/?q=place_id:${placeId}`;
+      mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}&query_place_id=${placeId}`;
     } else {
       // Fallback to address search
-      const encodedAddress = encodeURIComponent(address);
       mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
     }
     
