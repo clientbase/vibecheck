@@ -56,7 +56,7 @@ export async function searchNearbyPlaces(
     url.searchParams.append('location', `${lat},${lon}`);
     url.searchParams.append('radius', radius.toString());
     url.searchParams.append('keyword', query);
-    url.searchParams.append('type', 'night_club|bar');
+    url.searchParams.append('type', 'night_club|bar|restaurant');
     url.searchParams.append('key', apiKey);
     if (nextPageToken) {
       url.searchParams.append('pagetoken', nextPageToken);
