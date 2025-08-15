@@ -60,11 +60,13 @@ export async function GET(request: Request) {
           },
         },
       });
+      console.log('Fetched DB venues:', dbVenues);
 
       // Get venues from Google Places
       let googlePlaces: GooglePlace[] = [];
       try {
         googlePlaces = await searchNearbyPlaces(latNum, lonNum, query, radius);
+        console.log('Fetched Google Places:', googlePlaces);
       } catch (error) {
         console.warn('Google Places API error:', error);
         // Continue with just DB results if Google API fails
@@ -72,6 +74,7 @@ export async function GET(request: Request) {
 
       // Combine and deduplicate results
       const combinedVenues = await combineVenueResults(dbVenues, googlePlaces);
+      console.log('Combined venues:', combinedVenues);
 
       return NextResponse.json({
         venues: combinedVenues,
