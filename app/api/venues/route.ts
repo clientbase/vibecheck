@@ -4,6 +4,29 @@ import { calculateVenueAggregatedData } from '@/lib/aggregation';
 import { searchNearbyPlaces, convertGooglePlaceToVenue } from '@/lib/googlePlaces';
 import { put } from '@vercel/blob';
 import { isValidAdminRequest } from '@/lib/admin';
+import type { Venue, VibeReport } from '@prisma/client';
+
+type GooglePlace = {
+  place_id: string;
+  name: string;
+  formatted_address: string;
+  geometry: {
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
+  business_status?: string;
+  types: string[];
+  rating?: number;
+  user_ratings_total?: number;
+  price_level?: number;
+};
+
+type VenueWithVibeReports = Venue & {
+  vibeReports: VibeReport[];
+  google_place_id?: string | null;
+};
 
 export async function GET(request: Request) {
   try {
@@ -36,7 +59,7 @@ export async function GET(request: Request) {
       });
 
       // Get venues from Google Places
-      let googlePlaces: any[] = [];
+      let googlePlaces: GooglePlace[] = [];
       try {
         googlePlaces = await searchNearbyPlaces(latNum, lonNum, query, radius);
       } catch (error) {
@@ -88,7 +111,7 @@ export async function GET(request: Request) {
 }
 
 // Helper function to combine DB venues and Google Places results
-function combineVenueResults(dbVenues: any[], googlePlaces: any[]) {
+function combineVenueResults(dbVenues: VenueWithVibeReports[], googlePlaces: GooglePlace[]) {
   const venuesWithAggregatedData = dbVenues.map(venue => ({
     ...venue,
     aggregatedData: calculateVenueAggregatedData(venue.vibeReports),
