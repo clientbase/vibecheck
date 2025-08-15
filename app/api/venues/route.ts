@@ -193,6 +193,7 @@ async function combineVenueResults(dbVenues: VenueWithVibeReports[], googlePlace
     }));
 
   console.log('Mapped Google venues:', googleVenues);
+  console.log('Final combined venues:', [...venuesWithAggregatedData, ...googleVenues]);
   return [...venuesWithAggregatedData, ...googleVenues];
 }
 
