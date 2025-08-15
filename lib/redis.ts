@@ -5,6 +5,8 @@ type RedisClient = {
   incr: (key: string) => Promise<number>;
   expire: (key: string, seconds: number) => Promise<number>;
   ttl: (key: string) => Promise<number>;
+  get: (key: string) => Promise<string | null>;
+  set: (key: string, value: string, mode: string, duration: number) => Promise<'OK'>;
 };
 
 let redisSingleton: RedisClient | null | undefined;

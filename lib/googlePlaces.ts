@@ -1,4 +1,5 @@
 import { Venue } from './types';
+import { getRedis } from '@/lib/redis';
 
 interface GooglePlace {
   place_id: string;
@@ -28,6 +29,10 @@ interface GooglePlaceDetailsResponse {
   result: GooglePlace;
   status: string;
   error_message?: string;
+}
+
+interface GooglePlacePhoto {
+  photo_reference: string;
 }
 
 export async function searchNearbyPlaces(
@@ -89,6 +94,47 @@ export async function getPlaceDetails(placeId: string): Promise<GooglePlace> {
   }
 
   return data.result;
+}
+
+export async function getPlacePhotos(placeId: string): Promise<string[]> {
+  const redis = await getRedis();
+  const cacheKey = `place_photos:${placeId}`;
+
+  // Check cache first
+  const cachedPhotos = await redis?.get(cacheKey);
+  if (cachedPhotos) {
+    return JSON.parse(cachedPhotos);
+  }
+
+  // Fetch from Google Places API
+  const apiKey = process.env.GOOGLE_PLACES_API_KEY;
+  if (!apiKey) {
+    throw new Error('Google Places API key not configured');
+  }
+
+  const url = new URL('https://maps.googleapis.com/maps/api/place/details/json');
+  url.searchParams.append('place_id', placeId);
+  url.searchParams.append('fields', 'photos');
+  url.searchParams.append('key', apiKey);
+
+  const response = await fetch(url.toString());
+  if (!response.ok) {
+    throw new Error(`Google Places API error: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  if (data.status !== 'OK') {
+    throw new Error(`Google Places API error: ${data.status} - ${data.error_message || 'Unknown error'}`);
+  }
+
+  const photos = data.result.photos.map((photo: GooglePlacePhoto) => {
+    return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${apiKey}`;
+  });
+
+  // Cache the result
+  await redis?.set(cacheKey, JSON.stringify(photos), 'EX', 60 * 60 * 24); // Cache for 24 hours
+
+  return photos;
 }
 
 export function convertGooglePlaceToVenue(place: GooglePlace): Partial<Venue> {

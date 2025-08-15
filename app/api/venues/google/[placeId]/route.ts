@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getPlaceDetails, convertGooglePlaceToVenue } from '@/lib/googlePlaces';
+import { getPlaceDetails, convertGooglePlaceToVenue, getPlacePhotos } from '@/lib/googlePlaces';
 
 export async function GET(
   request: Request,
@@ -7,9 +7,14 @@ export async function GET(
 ) {
   try {
     const { placeId } = await params;
+    console.log(`Fetching details for placeId: ${placeId}`);
     
     // Fetch place details from Google Places API
     const googlePlace = await getPlaceDetails(placeId);
+    console.log('Fetched Google Place details:', googlePlace);
+    
+    // Fetch and cache photos
+    const photos = await getPlacePhotos(placeId);
     
     // Convert to venue format
     const venue = {
@@ -30,7 +35,9 @@ export async function GET(
         mostCommonMusicGenre: null,
         lastVibeReportAt: null,
       },
-      source: 'google'
+      source: 'google',
+      coverPhotoUrl: photos[0] || null, // Set coverPhotoUrl to the first photo
+      photos // Include photos in the venue object
     };
 
     return NextResponse.json(venue);

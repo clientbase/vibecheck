@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { calculateVenueAggregatedData } from '@/lib/aggregation';
-import { searchNearbyPlaces, convertGooglePlaceToVenue } from '@/lib/googlePlaces';
+import { searchNearbyPlaces, convertGooglePlaceToVenue, getPlaceDetails, getPlacePhotos } from '@/lib/googlePlaces';
 import { put } from '@vercel/blob';
 import { isValidAdminRequest } from '@/lib/admin';
 import { slugify } from '@/lib/slugify';
 import type { Venue, VibeReport } from '@prisma/client';
+import { getRedis } from '@/lib/redis';
 
 type GooglePlace = {
   place_id: string;
@@ -70,7 +71,7 @@ export async function GET(request: Request) {
       }
 
       // Combine and deduplicate results
-      const combinedVenues = combineVenueResults(dbVenues, googlePlaces);
+      const combinedVenues = await combineVenueResults(dbVenues, googlePlaces);
 
       return NextResponse.json({
         venues: combinedVenues,
@@ -113,40 +114,57 @@ export async function GET(request: Request) {
 }
 
 // Helper function to combine DB venues and Google Places results
-function combineVenueResults(dbVenues: VenueWithVibeReports[], googlePlaces: GooglePlace[]) {
+async function combineVenueResults(dbVenues: VenueWithVibeReports[], googlePlaces: GooglePlace[]) {
+  const redis = await getRedis();
+
   const venuesWithAggregatedData = dbVenues.map(venue => ({
     ...venue,
     aggregatedData: calculateVenueAggregatedData(venue.vibeReports),
     source: 'database'
   }));
 
-  // Convert Google Places to venue format and mark as not in database
-  const googleVenues = googlePlaces
+  const googleVenues = await Promise.all(googlePlaces
     .filter(place => {
-      // Filter out places that already exist in our database
-      return !dbVenues.some(dbVenue => 
-        dbVenue.google_place_id === place.place_id
-      );
+      return !dbVenues.some(dbVenue => dbVenue.google_place_id === place.place_id);
     })
-    .map(place => ({
-      ...convertGooglePlaceToVenue(place),
-      id: `google_${place.place_id}`, // Temporary ID for frontend
-      slug: `google_${place.place_id}`,
-      categories: [],
-      isFeatured: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      vibeReports: [],
-      aggregatedData: {
-        totalVibes: 0,
-        vibesLastHour: 0,
-        averageVibeLevel: null,
-        averageQueueLength: null,
-        averageCoverCharge: null,
-        mostCommonMusicGenre: null,
-        lastVibeReportAt: null,
-      },
-      source: 'google'
+    .map(async place => {
+      let photos = [];
+      const cacheKey = `place_details:${place.place_id}`;
+
+      if (redis) {
+        const cachedDetails = await redis.get(cacheKey);
+        if (cachedDetails) {
+          const cachedData = JSON.parse(cachedDetails);
+          photos = cachedData.photos;
+        } else {
+          photos = await getPlacePhotos(place.place_id);
+          await redis.set(cacheKey, JSON.stringify({ photos }), 'EX', 60 * 60 * 24);
+        }
+      } else {
+        photos = await getPlacePhotos(place.place_id);
+      }
+
+      return {
+        ...convertGooglePlaceToVenue(place),
+        id: `google_${place.place_id}`,
+        slug: `google_${place.place_id}`,
+        categories: [],
+        isFeatured: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        vibeReports: [],
+        aggregatedData: {
+          totalVibes: 0,
+          vibesLastHour: 0,
+          averageVibeLevel: null,
+          averageQueueLength: null,
+          averageCoverCharge: null,
+          mostCommonMusicGenre: null,
+          lastVibeReportAt: null,
+        },
+        source: 'google',
+        coverPhotoUrl: photos[0] || null
+      };
     }));
 
   return [...venuesWithAggregatedData, ...googleVenues];
