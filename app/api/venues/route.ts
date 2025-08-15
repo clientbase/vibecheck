@@ -36,8 +36,8 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const lat = searchParams.get('lat');
     const lon = searchParams.get('lon');
-    const query = searchParams.get('query') || 'night clubs';
-    const radius = parseInt(searchParams.get('radius') || '1000');
+    const query = searchParams.get('query') || 'night clubs bar';
+    const radius = parseInt(searchParams.get('radius') || '5000');
 
     if (lat && lon) {
       // Location-based search with Google Places integration

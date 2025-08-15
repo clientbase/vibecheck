@@ -29,7 +29,7 @@ export default function Home() {
       setLoading(true);
       const data = await getVenues(
         lat !== undefined && lon !== undefined 
-          ? { lat, lon, query: 'night clubs', radius: 5000 } // 5km radius
+          ? { lat, lon, query: 'night club bar', radius: 5000 } // 5km radius
           : undefined
       );
       setVenues(data.venues);
