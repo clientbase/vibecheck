@@ -150,50 +150,54 @@ async function combineVenueResults(dbVenues: VenueWithVibeReports[], googlePlace
       return !existsInDb;
     })
     .map(async place => {
-      console.log('Mapping Google Place:', place);
-      let photos = [];
-      const cacheKey = `place_details:${place.place_id}`;
+      try {
+        console.log('Mapping Google Place:', place);
+        let photos = [];
+        const cacheKey = `place_details:${place.place_id}`;
 
-      if (redis) {
-        const cachedDetails = await redis.get(cacheKey);
-        if (cachedDetails) {
-          const cachedData = JSON.parse(cachedDetails);
-          photos = cachedData.photos;
+        if (redis) {
+          const cachedDetails = await redis.get(cacheKey);
+          if (cachedDetails) {
+            const cachedData = JSON.parse(cachedDetails);
+            photos = cachedData.photos;
+          } else {
+            photos = await getPlacePhotos(place.place_id);
+            await redis.set(cacheKey, JSON.stringify({ photos }), 'EX', 60 * 60 * 24);
+          }
         } else {
           photos = await getPlacePhotos(place.place_id);
-          await redis.set(cacheKey, JSON.stringify({ photos }), 'EX', 60 * 60 * 24);
         }
-      } else {
-        photos = await getPlacePhotos(place.place_id);
-      }
 
-      const mappedPlace = {
-        ...convertGooglePlaceToVenue(place),
-        id: `google_${place.place_id}`,
-        slug: `google_${place.place_id}`,
-        categories: [],
-        isFeatured: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        vibeReports: [],
-        aggregatedData: {
-          totalVibes: 0,
-          vibesLastHour: 0,
-          averageVibeLevel: null,
-          averageQueueLength: null,
-          averageCoverCharge: null,
-          mostCommonMusicGenre: null,
-          lastVibeReportAt: null,
-        },
-        source: 'google',
-        coverPhotoUrl: photos[0] || null
-      };
-      console.log('Mapped Google Place:', mappedPlace);
-      return mappedPlace;
+        const mappedPlace = {
+          ...convertGooglePlaceToVenue(place),
+          id: `google_${place.place_id}`,
+          slug: `google_${place.place_id}`,
+          categories: [],
+          isFeatured: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          vibeReports: [],
+          aggregatedData: {
+            totalVibes: 0,
+            vibesLastHour: 0,
+            averageVibeLevel: null,
+            averageQueueLength: null,
+            averageCoverCharge: null,
+            mostCommonMusicGenre: null,
+            lastVibeReportAt: null,
+          },
+          source: 'google',
+          coverPhotoUrl: photos[0] || null
+        };
+        console.log('Mapped Google Place:', mappedPlace);
+        return mappedPlace;
+      } catch (error) {
+        console.error('Error mapping Google Place:', place, error);
+        throw error; // Re-throw to ensure Promise.all fails
+      }
     }));
 
   console.log('Mapped Google venues:', googleVenues);
-  console.log('Final combined venues:', [...venuesWithAggregatedData, ...googleVenues]);
   return [...venuesWithAggregatedData, ...googleVenues];
 }
 
