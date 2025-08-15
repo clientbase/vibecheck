@@ -191,7 +191,7 @@ export default function VenuePage() {
               <p className="text-gray-600 break-words flex-1">{venue.address}</p>
               <GoogleMapsButton 
                 address={venue.address}
-                venueName={venue.name}
+                placeId={venue.google_place_id || undefined}
                 variant="outline"
                 size="sm"
               />

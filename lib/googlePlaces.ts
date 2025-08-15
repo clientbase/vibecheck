@@ -3,7 +3,8 @@ import { Venue } from './types';
 interface GooglePlace {
   place_id: string;
   name: string;
-  formatted_address: string;
+  formatted_address?: string; // Only available in Place Details API
+  vicinity?: string; // Available in Nearby Search API
   geometry: {
     location: {
       lat: number;
@@ -93,7 +94,7 @@ export async function getPlaceDetails(placeId: string): Promise<GooglePlace> {
 export function convertGooglePlaceToVenue(place: GooglePlace): Partial<Venue> {
   return {
     name: place.name,
-    address: place.formatted_address,
+    address: place.formatted_address || place.vicinity || 'Address not available',
     lat: place.geometry.location.lat,
     lon: place.geometry.location.lng,
     google_place_id: place.place_id,

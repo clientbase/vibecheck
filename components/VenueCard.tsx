@@ -107,7 +107,7 @@ export function VenueCard({ venue, onClick, distance }: VenueCardProps) {
         </div>
         <GoogleMapsButton 
           address={venue.address}
-          venueName={venue.name}
+          placeId={venue.google_place_id || undefined}
           variant="outline"
           size="sm"
         />

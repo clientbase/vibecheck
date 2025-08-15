@@ -10,7 +10,8 @@ import type { Venue, VibeReport } from '@prisma/client';
 type GooglePlace = {
   place_id: string;
   name: string;
-  formatted_address: string;
+  formatted_address?: string; // Only available in Place Details API
+  vicinity?: string; // Available in Nearby Search API
   geometry: {
     location: {
       lat: number;
