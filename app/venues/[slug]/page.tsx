@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useState, useEffect, useMemo } from "react";
 import { Venue, VibeReport } from "@/lib/types";
-import { getVenueBySlug } from "@/lib/api";
+import { getVenueBySlug, getGoogleVenueByPlaceId } from "@/lib/api";
 import { VibeReportCard } from "@/components/VibeReportCard";
 import { VibeReportForm } from "@/components/VibeReportForm";
 import { GoogleMapsButton } from "@/components/GoogleMapsButton";
@@ -32,6 +32,34 @@ export default function VenuePage() {
     async function fetchVenue() {
       try {
         setLoading(true);
+        
+        // Check if this is a Google Places venue
+        if (slug.startsWith('google_')) {
+          const googleVenueData = sessionStorage.getItem(`google_venue_${slug}`);
+          if (googleVenueData) {
+            const googleVenue = JSON.parse(googleVenueData);
+            setVenue(googleVenue);
+            // Clean up the sessionStorage after use
+            sessionStorage.removeItem(`google_venue_${slug}`);
+            setLoading(false);
+            return;
+          } else {
+            // Fallback: fetch from Google Places API if sessionStorage is empty
+            const placeId = slug.replace('google_', '');
+            try {
+              const googleVenue = await getGoogleVenueByPlaceId(placeId);
+              setVenue(googleVenue);
+              setLoading(false);
+              return;
+            } catch (err) {
+              console.error('Failed to fetch Google Place details:', err);
+              // Continue to try database fetch as last resort
+              // (in case the venue was already created from a previous vibe report)
+            }
+          }
+        }
+        
+        // For database venues, fetch from API
         const data = await getVenueBySlug(slug);
         setVenue(data);
       } catch (err) {
@@ -190,7 +218,11 @@ export default function VenuePage() {
       {/* Submit Vibe Report Section - moved above Vibe Stats */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-6" onClickCapture={handleFormOpenClickCapture}>
-          <VibeReportForm venueSlug={venue.slug} venueName={venue.name} />
+          <VibeReportForm 
+            venueSlug={venue.slug} 
+            venueName={venue.name}
+            googleVenueData={venue.source === 'google' ? venue : undefined}
+          />
         </div>
       </div>
 
@@ -267,7 +299,11 @@ export default function VenuePage() {
           <div className="text-center py-8 text-gray-500">
             <p className="mb-4">No vibe reports yet. Be the first to report the vibe!</p>
             <div className="flex items-center justify-center" onClickCapture={handleFormOpenClickCapture}>
-              <VibeReportForm venueSlug={venue.slug} venueName={venue.name} />
+              <VibeReportForm 
+                venueSlug={venue.slug} 
+                venueName={venue.name}
+                googleVenueData={venue.source === 'google' ? venue : undefined}
+              />
             </div>
           </div>
         )}

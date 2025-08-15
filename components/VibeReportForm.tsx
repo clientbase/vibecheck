@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { submitVibeReport } from "@/lib/api";
@@ -13,13 +14,16 @@ import { ImageUpload } from "@/components/ImageUpload";
 import { QueueLength } from "@/lib/constants";
 import { VIBE_LEVELS } from "@/lib/vibe-map";
 import { getOrCreateDeviceId } from "@/lib/client-id";
+import { Venue } from "@/lib/types";
 
 interface VibeReportFormProps {
   venueSlug: string;
   venueName: string;
+  googleVenueData?: Venue;
 }
 
-export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
+export function VibeReportForm({ venueSlug, venueName, googleVenueData }: VibeReportFormProps) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
@@ -54,11 +58,21 @@ export function VibeReportForm({ venueSlug, venueName }: VibeReportFormProps) {
         notes: formData.notes || undefined,
         imageUrl: formData.imageUrl || undefined,
         deviceId: getOrCreateDeviceId() || undefined,
+        googleVenueData: googleVenueData || undefined,
       });
 
       toast.success("Vibe Report Submitted!", {
         description: `Your report for ${venueName} has been submitted successfully.`,
       });
+
+      // Check if we need to redirect to a different slug (for Google Places venues)
+      if (result.redirectToSlug && result.redirectToSlug !== venueSlug) {
+        toast.info("Redirecting to venue page...", {
+          description: "This venue is now available in our database.",
+        });
+        router.push(`/venues/${result.redirectToSlug}`);
+        return; // Don't reset form, let the new page handle it
+      }
 
       // Reset form and close drawer
       setFormData({

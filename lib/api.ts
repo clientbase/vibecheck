@@ -44,6 +44,16 @@ export async function getVenueBySlug(slug: string): Promise<Venue> {
   return response.json();
 }
 
+export async function getGoogleVenueByPlaceId(placeId: string): Promise<Venue> {
+  const response = await fetch(`${API_BASE_URL}/api/venues/google/${placeId}`);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch Google venue: ${response.statusText}`);
+  }
+  
+  return response.json();
+}
+
 export async function submitVibeReport(
   slug: string, 
   data: {
@@ -54,6 +64,7 @@ export async function submitVibeReport(
     notes?: string;
     imageUrl?: string;
     deviceId?: string;
+    googleVenueData?: Venue;
   }
 ): Promise<{
   success: boolean;
@@ -75,6 +86,7 @@ export async function submitVibeReport(
     remaining: number;
     resetTime: string;
   };
+  redirectToSlug?: string;
 }> {
   // Get client IP from ipify
   let clientIP = 'unknown';

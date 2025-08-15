@@ -23,6 +23,12 @@ interface GooglePlacesResponse {
   error_message?: string;
 }
 
+interface GooglePlaceDetailsResponse {
+  result: GooglePlace;
+  status: string;
+  error_message?: string;
+}
+
 export async function searchNearbyPlaces(
   lat: number,
   lon: number,
@@ -55,6 +61,33 @@ export async function searchNearbyPlaces(
   }
 
   return data.results;
+}
+
+export async function getPlaceDetails(placeId: string): Promise<GooglePlace> {
+  const apiKey = process.env.GOOGLE_PLACES_API_KEY;
+  
+  if (!apiKey) {
+    throw new Error('Google Places API key not configured');
+  }
+
+  const url = new URL('https://maps.googleapis.com/maps/api/place/details/json');
+  url.searchParams.append('place_id', placeId);
+  url.searchParams.append('fields', 'place_id,name,formatted_address,geometry,business_status,types,rating,user_ratings_total,price_level');
+  url.searchParams.append('key', apiKey);
+
+  const response = await fetch(url.toString());
+  
+  if (!response.ok) {
+    throw new Error(`Google Places API error: ${response.statusText}`);
+  }
+
+  const data: GooglePlaceDetailsResponse = await response.json();
+  
+  if (data.status !== 'OK') {
+    throw new Error(`Google Places API error: ${data.status} - ${data.error_message || 'Unknown error'}`);
+  }
+
+  return data.result;
 }
 
 export function convertGooglePlaceToVenue(place: GooglePlace): Partial<Venue> {

@@ -134,7 +134,13 @@ export default function Home() {
               key={venue.id} 
               venue={venue} 
               distance={venue.distance}
-              onClick={() => router.push(`/venues/${venue.slug}`)} 
+              onClick={() => {
+                if (venue.source === 'google') {
+                  // For Google Places venues, store the venue data in sessionStorage
+                  sessionStorage.setItem(`google_venue_${venue.slug}`, JSON.stringify(venue));
+                }
+                router.push(`/venues/${venue.slug}`);
+              }} 
             />
           ))}
         </div>

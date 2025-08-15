@@ -4,6 +4,7 @@ import { calculateVenueAggregatedData } from '@/lib/aggregation';
 import { searchNearbyPlaces, convertGooglePlaceToVenue } from '@/lib/googlePlaces';
 import { put } from '@vercel/blob';
 import { isValidAdminRequest } from '@/lib/admin';
+import { slugify } from '@/lib/slugify';
 import type { Venue, VibeReport } from '@prisma/client';
 
 type GooglePlace = {
@@ -183,14 +184,7 @@ async function geocodeAddress(address: string) {
   return { lat: loc.lat as number, lon: loc.lng as number };
 }
 
-function slugify(input: string): string {
-  return input
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-}
+
 
 async function uploadImageFromUrl(remoteUrl: string, slug: string): Promise<string> {
   const res = await fetch(remoteUrl);

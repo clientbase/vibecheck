@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getRedis } from '@/lib/redis';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
+import { slugify } from '@/lib/slugify';
 
 // Rate limiting configuration
 const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour in milliseconds
@@ -61,6 +62,8 @@ async function checkRateLimit(key: string): Promise<{ allowed: boolean; remainin
   };
 }
 
+
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
@@ -70,7 +73,7 @@ export async function POST(
     
     // Parse request body
     const body = await request.json();
-    const { vibeLevel, queueLength, coverCharge, musicGenre, notes, imageUrl, clientIP, deviceId } = body;
+    const { vibeLevel, queueLength, coverCharge, musicGenre, notes, imageUrl, clientIP, deviceId, googleVenueData } = body;
     
     // Check for logged-in user
     const session = await getServerSession(authOptions);
@@ -143,9 +146,46 @@ export async function POST(
       : Buffer.from(`${clientIP}-${userAgent}`).toString('base64').slice(0, 16);
     
     // Find the venue
-    const venue = await prisma.venue.findUnique({
+    let venue = await prisma.venue.findUnique({
       where: { slug }
     });
+    
+    // If venue not found and this is a Google Places venue, create it
+    if (!venue && slug.startsWith('google_') && googleVenueData) {
+      try {
+        // Generate a proper slug from the venue name
+        const newSlug = slugify(googleVenueData.name);
+        
+        // Ensure slug is unique by checking database and adding suffix if needed
+        let slugSuffix = 0;
+        let finalSlug = newSlug;
+        while (await prisma.venue.findUnique({ where: { slug: finalSlug } })) {
+          slugSuffix++;
+          finalSlug = `${newSlug}-${slugSuffix}`;
+        }
+        
+        // Create the venue from Google Places data
+        venue = await prisma.venue.create({
+          data: {
+            name: googleVenueData.name,
+            slug: finalSlug,
+            address: googleVenueData.address,
+            lat: googleVenueData.lat,
+            lon: googleVenueData.lon,
+            google_place_id: googleVenueData.google_place_id,
+            categories: googleVenueData.categories || [],
+            isFeatured: false,
+            coverPhotoUrl: googleVenueData.coverPhotoUrl || null,
+          } as { name: string; slug: string; address: string; lat: number; lon: number; google_place_id: string; categories: string[]; isFeatured: boolean; coverPhotoUrl: string | null; }
+        });
+      } catch (error) {
+        console.error('Error creating venue from Google Places data:', error);
+        return NextResponse.json(
+          { error: 'Failed to create venue' },
+          { status: 500 }
+        );
+      }
+    }
     
     if (!venue) {
       return NextResponse.json(
@@ -198,7 +238,9 @@ export async function POST(
       rateLimit: {
         remaining: rateLimit.remaining,
         resetTime: new Date(rateLimit.resetTime).toISOString()
-      }
+      },
+      // Include venue slug for potential redirect (if venue was just created)
+      redirectToSlug: slug.startsWith('google_') && googleVenueData ? venue.slug : undefined
     });
     
     response.headers.set('X-RateLimit-Remaining', rateLimit.remaining.toString());
