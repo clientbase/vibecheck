@@ -74,6 +74,10 @@ export async function searchNearbyPlaces(
       throw new Error(`Google Places API error: ${data.status} - ${data.error_message || 'Unknown error'}`);
     }
 
+    if (!data.results) {
+      throw new Error('No results found in Google Places API response');
+    }
+
     allResults = allResults.concat(data.results);
     nextPageToken = data.next_page_token;
 
