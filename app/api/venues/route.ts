@@ -70,7 +70,7 @@ export async function GET(request: Request) {
       let googlePlaces: GooglePlace[] = [];
       try {
         googlePlaces = await searchNearbyPlaces(latNum, lonNum, query, radius);
-        console.log('Fetched Google Places:', googlePlaces);
+        console.log('Fetched Google Places:', googlePlaces.length);
       } catch (error) {
         console.warn('Google Places API error:', error);
         // Continue with just DB results if Google API fails
@@ -128,21 +128,29 @@ export async function GET(request: Request) {
 async function combineVenueResults(dbVenues: VenueWithVibeReports[], googlePlaces: GooglePlace[]) {
   const redis = await getRedis();
 
-  const venuesWithAggregatedData = dbVenues.map(venue => ({
-    ...venue,
-    aggregatedData: calculateVenueAggregatedData(venue.vibeReports),
-    source: 'database'
-  }));
+  console.log('Mapping DB venues');
+  const venuesWithAggregatedData = dbVenues.map(venue => {
+    console.log('Mapping DB venue:', venue);
+    return {
+      ...venue,
+      aggregatedData: calculateVenueAggregatedData(venue.vibeReports),
+      source: 'database'
+    };
+  });
+  console.log('Mapped DB venues:', venuesWithAggregatedData);
 
   if (!Array.isArray(googlePlaces)) {
     throw new Error('googlePlaces is not an array');
   }
 
+  console.log('Filtering and mapping Google Places');
   const googleVenues = await Promise.all(googlePlaces
     .filter(place => {
-      return !dbVenues.some(dbVenue => dbVenue.google_place_id === place.place_id);
+      const existsInDb = dbVenues.some(dbVenue => dbVenue.google_place_id === place.place_id);
+      return !existsInDb;
     })
     .map(async place => {
+      console.log('Mapping Google Place:', place);
       let photos = [];
       const cacheKey = `place_details:${place.place_id}`;
 
@@ -159,7 +167,7 @@ async function combineVenueResults(dbVenues: VenueWithVibeReports[], googlePlace
         photos = await getPlacePhotos(place.place_id);
       }
 
-      return {
+      const mappedPlace = {
         ...convertGooglePlaceToVenue(place),
         id: `google_${place.place_id}`,
         slug: `google_${place.place_id}`,
@@ -180,8 +188,11 @@ async function combineVenueResults(dbVenues: VenueWithVibeReports[], googlePlace
         source: 'google',
         coverPhotoUrl: photos[0] || null
       };
+      console.log('Mapped Google Place:', mappedPlace);
+      return mappedPlace;
     }));
 
+  console.log('Mapped Google venues:', googleVenues);
   return [...venuesWithAggregatedData, ...googleVenues];
 }
 
