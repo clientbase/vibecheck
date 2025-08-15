@@ -21,6 +21,7 @@ export interface Venue {
   address: string;
   lat: number;
   lon: number;
+  google_place_id?: string | null;
   categories: string[]; // Example: ["hip-hop", "rooftop"]
   isFeatured: boolean;
   coverPhotoUrl?: string | null;
@@ -29,6 +30,7 @@ export interface Venue {
   vibeReports?: VibeReport[];
   distance?: number; // Distance from user location in kilometers
   aggregatedData?: VenueAggregatedData;
+  source?: 'database' | 'google';  // To distinguish between DB venues and Google venues
 }
 
 export interface VibeReport {

@@ -10,8 +10,6 @@ type VenueCardProps = {
   distance?: number;
 };
 
-
-
 export function VenueCard({ venue, onClick, distance }: VenueCardProps) {
   return (
     <Card className="w-full max-w-sm cursor-pointer hover:shadow-lg transition" onClick={onClick}>
@@ -28,13 +26,24 @@ export function VenueCard({ venue, onClick, distance }: VenueCardProps) {
           )}
         </div>
       </CardHeader>
-      {venue.coverPhotoUrl && (
-        <img
-          src={venue.coverPhotoUrl}
-          alt={venue.name}
-          className="w-full h-40 object-cover"
-        />
-      )}
+      
+      {/* Always show image area - either cover photo or placeholder */}
+      <div className="w-full h-40 bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center relative overflow-hidden">
+        {venue.coverPhotoUrl ? (
+          <img
+            src={venue.coverPhotoUrl}
+            alt={venue.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center text-white">
+            <div className="text-4xl mb-2">🎵</div>
+            <div className="text-sm font-medium opacity-90">Venue Photo</div>
+            <div className="text-xs opacity-75">Coming Soon</div>
+          </div>
+        )}
+      </div>
+
       <CardContent>
         <div className="flex flex-wrap gap-1 mb-3">
           {venue.categories.map((cat) => (

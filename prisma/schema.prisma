@@ -38,6 +38,7 @@ model Venue {
   address        String
   lat            Float
   lon            Float
+  google_place_id String?      @unique  // Google Places API place_id
   categories     String[]      // Example: ["hip-hop", "rooftop"]
   isFeatured     Boolean       @default(false)
   coverPhotoUrl  String?       

@@ -2,8 +2,30 @@ import { Venue } from './types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
-export async function getVenues(): Promise<{ venues: Venue[]; total: number }> {
-  const response = await fetch(`${API_BASE_URL}/api/venues`);
+interface GetVenuesOptions {
+  lat?: number;
+  lon?: number;
+  query?: string;
+  radius?: number;
+}
+
+export async function getVenues(options?: GetVenuesOptions): Promise<{ venues: Venue[]; total: number }> {
+  const url = new URL(`${API_BASE_URL}/api/venues`);
+  
+  if (options?.lat !== undefined && options?.lon !== undefined) {
+    url.searchParams.append('lat', options.lat.toString());
+    url.searchParams.append('lon', options.lon.toString());
+  }
+  
+  if (options?.query) {
+    url.searchParams.append('query', options.query);
+  }
+  
+  if (options?.radius) {
+    url.searchParams.append('radius', options.radius.toString());
+  }
+  
+  const response = await fetch(url.toString());
   
   if (!response.ok) {
     throw new Error(`Failed to fetch venues: ${response.statusText}`);

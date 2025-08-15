@@ -14,7 +14,7 @@ export default function Home() {
   const [venues, setVenues] = useState<Venue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [locationObtained, setLocationObtained] = useState(false);
+  const [initialFetchDone, setInitialFetchDone] = useState(false);
   
   // Location hook - watch for location changes
   const { location, error: locationError, loading: locationLoading, getLocation } = useLocationWatch({
@@ -23,34 +23,42 @@ export default function Home() {
     maximumAge: 30000, // 30 seconds - allow cached location within 30s
   });
 
-  useEffect(() => {
-    async function fetchVenues() {
-      try {
-        setLoading(true);
-        const data = await getVenues();
-        setVenues(data.venues);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch venues');
-      } finally {
-        setLoading(false);
-      }
+  // Function to fetch venues with optional location
+  const fetchVenues = async (lat?: number, lon?: number) => {
+    try {
+      setLoading(true);
+      const data = await getVenues(
+        lat !== undefined && lon !== undefined 
+          ? { lat, lon, query: 'night clubs', radius: 5000 } // 5km radius
+          : undefined
+      );
+      setVenues(data.venues);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch venues');
+    } finally {
+      setLoading(false);
     }
+  };
 
-    fetchVenues();
-  }, []);
-
-
-
-  // Track when location is obtained
+  // Initial fetch without location
   useEffect(() => {
-    if (location && !locationObtained) {
-      setLocationObtained(true);
+    if (!initialFetchDone) {
+      fetchVenues();
+      setInitialFetchDone(true);
     }
-  }, [location, locationObtained]);
+  }, [initialFetchDone]);
+
+  // Refetch with location when location becomes available
+  useEffect(() => {
+    if (location && initialFetchDone) {
+      console.log('Location obtained, refetching venues with location:', location);
+      fetchVenues(location.latitude, location.longitude);
+    }
+  }, [location?.latitude, location?.longitude, initialFetchDone]);
 
   // Calculate distances for venues when location is available
   const venuesWithDistance = useMemo(() => {
-    if (!location || !locationObtained) {
+    if (!location) {
       return venues.map(venue => ({ ...venue, distance: undefined }));
     }
     
@@ -66,9 +74,9 @@ export default function Home() {
       if (b.distance === undefined) return -1;
       return a.distance - b.distance;
     });
-  }, [venues, location?.latitude, location?.longitude, locationObtained]);
+  }, [venues, location?.latitude, location?.longitude]);
 
-  if (loading) {
+  if (loading && !initialFetchDone) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <Image
@@ -104,6 +112,22 @@ export default function Home() {
     <>
       {/* <Header /> removed, global header is used */}
       <div className="container mx-auto px-4 py-8">
+        {locationLoading && (
+          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="text-sm text-blue-700">
+              📍 Getting your location to find nearby venues...
+            </div>
+          </div>
+        )}
+        
+        {locationError && (
+          <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div className="text-sm text-yellow-700">
+              📍 Location access denied. Showing all venues.
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {venuesWithDistance.map((venue) => (
             <VenueCard 
