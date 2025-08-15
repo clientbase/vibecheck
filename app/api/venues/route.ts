@@ -60,7 +60,6 @@ export async function GET(request: Request) {
           },
         },
       });
-      console.log('Fetched DB venues:', dbVenues);
 
       if (!Array.isArray(dbVenues)) {
         throw new Error('dbVenues is not an array');
@@ -70,7 +69,6 @@ export async function GET(request: Request) {
       let googlePlaces: GooglePlace[] = [];
       try {
         googlePlaces = await searchNearbyPlaces(latNum, lonNum, query, radius);
-        console.log('Fetched Google Places:', googlePlaces.length);
       } catch (error) {
         console.warn('Google Places API error:', error);
         // Continue with just DB results if Google API fails
@@ -82,7 +80,6 @@ export async function GET(request: Request) {
 
       // Combine and deduplicate results
       const combinedVenues = await combineVenueResults(dbVenues, googlePlaces);
-      console.log('Combined venues:', combinedVenues);
 
       return NextResponse.json({
         venues: combinedVenues,
@@ -128,22 +125,16 @@ export async function GET(request: Request) {
 async function combineVenueResults(dbVenues: VenueWithVibeReports[], googlePlaces: GooglePlace[]) {
   const redis = await getRedis();
 
-  console.log('Mapping DB venues');
-  const venuesWithAggregatedData = dbVenues.map(venue => {
-    console.log('Mapping DB venue:', venue);
-    return {
-      ...venue,
-      aggregatedData: calculateVenueAggregatedData(venue.vibeReports),
-      source: 'database'
-    };
-  });
-  console.log('Mapped DB venues:', venuesWithAggregatedData);
+  const venuesWithAggregatedData = dbVenues.map(venue => ({
+    ...venue,
+    aggregatedData: calculateVenueAggregatedData(venue.vibeReports),
+    source: 'database'
+  }));
 
   if (!Array.isArray(googlePlaces)) {
     throw new Error('googlePlaces is not an array');
   }
 
-  console.log('Filtering and mapping Google Places');
   const googleVenues = await Promise.all(googlePlaces
     .filter(place => {
       const existsInDb = dbVenues.some(dbVenue => dbVenue.google_place_id === place.place_id);
@@ -151,7 +142,6 @@ async function combineVenueResults(dbVenues: VenueWithVibeReports[], googlePlace
     })
     .map(async place => {
       try {
-        console.log('Mapping Google Place:', place);
         let photos = [];
         const cacheKey = `place_details:${place.place_id}`;
 
@@ -168,7 +158,7 @@ async function combineVenueResults(dbVenues: VenueWithVibeReports[], googlePlace
           photos = await getPlacePhotos(place.place_id);
         }
 
-        const mappedPlace = {
+        return {
           ...convertGooglePlaceToVenue(place),
           id: `google_${place.place_id}`,
           slug: `google_${place.place_id}`,
@@ -189,15 +179,12 @@ async function combineVenueResults(dbVenues: VenueWithVibeReports[], googlePlace
           source: 'google',
           coverPhotoUrl: photos[0] || null
         };
-        console.log('Mapped Google Place:', mappedPlace);
-        return mappedPlace;
       } catch (error) {
         console.error('Error mapping Google Place:', place, error);
         throw error; // Re-throw to ensure Promise.all fails
       }
     }));
 
-  console.log('Mapped Google venues:', googleVenues);
   return [...venuesWithAggregatedData, ...googleVenues];
 }
 
