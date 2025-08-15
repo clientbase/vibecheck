@@ -148,9 +148,9 @@ export async function getPlacePhotos(placeId: string): Promise<string[]> {
     throw new Error(`Google Places API error: ${data.status} - ${data.error_message || 'Unknown error'}`);
   }
 
-  const photos = data.result.photos.map((photo: GooglePlacePhoto) => {
+  const photos = data.result.photos ? data.result.photos.map((photo: GooglePlacePhoto) => {
     return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${apiKey}`;
-  });
+  }) : [];
 
   // Cache the result
   await redis?.set(cacheKey, JSON.stringify(photos), 'EX', 60 * 60 * 24); // Cache for 24 hours
