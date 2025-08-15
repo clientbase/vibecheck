@@ -23,6 +23,7 @@ interface GooglePlacesResponse {
   results: GooglePlace[];
   status: string;
   error_message?: string;
+  next_page_token?: string;
 }
 
 interface GooglePlaceDetailsResponse {
@@ -47,26 +48,42 @@ export async function searchNearbyPlaces(
     throw new Error('Google Places API key not configured');
   }
 
-  const url = new URL('https://maps.googleapis.com/maps/api/place/nearbysearch/json');
-  url.searchParams.append('location', `${lat},${lon}`);
-  url.searchParams.append('radius', radius.toString());
-  url.searchParams.append('keyword', query);
-  url.searchParams.append('type', 'night_club|bar|restaurant');
-  url.searchParams.append('key', apiKey);
+  let allResults: GooglePlace[] = [];
+  let nextPageToken: string | undefined;
 
-  const response = await fetch(url.toString());
-  
-  if (!response.ok) {
-    throw new Error(`Google Places API error: ${response.statusText}`);
-  }
+  do {
+    const url = new URL('https://maps.googleapis.com/maps/api/place/nearbysearch/json');
+    url.searchParams.append('location', `${lat},${lon}`);
+    url.searchParams.append('radius', radius.toString());
+    url.searchParams.append('keyword', query);
+    url.searchParams.append('type', 'night_club|bar|restaurant');
+    url.searchParams.append('key', apiKey);
+    if (nextPageToken) {
+      url.searchParams.append('pagetoken', nextPageToken);
+    }
 
-  const data: GooglePlacesResponse = await response.json();
-  
-  if (data.status !== 'OK') {
-    throw new Error(`Google Places API error: ${data.status} - ${data.error_message || 'Unknown error'}`);
-  }
+    const response = await fetch(url.toString());
+    
+    if (!response.ok) {
+      throw new Error(`Google Places API error: ${response.statusText}`);
+    }
 
-  return data.results;
+    const data: GooglePlacesResponse = await response.json();
+    
+    if (data.status !== 'OK') {
+      throw new Error(`Google Places API error: ${data.status} - ${data.error_message || 'Unknown error'}`);
+    }
+
+    allResults = allResults.concat(data.results);
+    nextPageToken = data.next_page_token;
+
+    // Google API requires a short delay before using the next_page_token
+    if (nextPageToken) {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+  } while (nextPageToken);
+
+  return allResults;
 }
 
 export async function getPlaceDetails(placeId: string): Promise<GooglePlace> {
