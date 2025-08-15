@@ -123,6 +123,10 @@ async function combineVenueResults(dbVenues: VenueWithVibeReports[], googlePlace
     source: 'database'
   }));
 
+  if (!Array.isArray(googlePlaces)) {
+    throw new Error('googlePlaces is not an array');
+  }
+
   const googleVenues = await Promise.all(googlePlaces
     .filter(place => {
       return !dbVenues.some(dbVenue => dbVenue.google_place_id === place.place_id);
