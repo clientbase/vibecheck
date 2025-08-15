@@ -40,21 +40,14 @@ export default function Home() {
     }
   };
 
-  // Initial fetch without location
+  // Fetch with location when location becomes available
   useEffect(() => {
-    if (!initialFetchDone) {
-      fetchVenues();
+    if (location) {
+      console.log('Location obtained, fetching venues with location:', location);
+      fetchVenues(location.latitude, location.longitude);
       setInitialFetchDone(true);
     }
-  }, [initialFetchDone]);
-
-  // Refetch with location when location becomes available
-  useEffect(() => {
-    if (location && initialFetchDone) {
-      console.log('Location obtained, refetching venues with location:', location);
-      fetchVenues(location.latitude, location.longitude);
-    }
-  }, [location?.latitude, location?.longitude, initialFetchDone]);
+  }, [location?.latitude, location?.longitude]);
 
   // Calculate distances for venues when location is available
   const venuesWithDistance = useMemo(() => {
