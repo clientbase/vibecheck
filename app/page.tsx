@@ -8,6 +8,8 @@ import { useState, useEffect, useMemo } from "react";
 import { getVenues } from "@/lib/api";
 import { useLocationWatch } from "@/lib/useLocation";
 import { calculateDistance } from "@/lib/utils";
+import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 
 export default function Home() {
   const router = useRouter();
@@ -15,7 +17,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [initialFetchDone, setInitialFetchDone] = useState(false);
-
+  const [imagesLoaded, setImagesLoaded] = useState(false);
   const [searchQuery, setSearchQuery] = useState('night club bar');
   const [searchRadius, setSearchRadius] = useState(5000);
 
@@ -77,6 +79,23 @@ export default function Home() {
       return a.distance - b.distance;
     });
   }, [venues, location?.latitude, location?.longitude]);
+
+  // Effect to show skeleton for a reasonable time before showing cards
+  useEffect(() => {
+    if (venuesWithDistance.length > 0 && !imagesLoaded) {
+      // Show skeleton for 1.5 seconds to allow images to load
+      const timeout = setTimeout(() => {
+        setImagesLoaded(true);
+      }, 1500);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [venuesWithDistance, imagesLoaded]);
+
+  // Reset imagesLoaded when venues change
+  useEffect(() => {
+    setImagesLoaded(false);
+  }, [venues]);
 
   if (loading && !initialFetchDone) {
     return (
@@ -157,22 +176,81 @@ export default function Home() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {venuesWithDistance.map((venue) => (
-            <VenueCard 
-              key={venue.id} 
-              venue={venue} 
-              distance={venue.distance}
-              onClick={() => {
-                if (venue.source === 'google') {
-                  // For Google Places venues, store the venue data in sessionStorage
-                  sessionStorage.setItem(`google_venue_${venue.slug}`, JSON.stringify(venue));
-                }
-                router.push(`/venues/${venue.slug}`);
-              }} 
-            />
-          ))}
-        </div>
+        {/* Show skeleton loading during initial load or while waiting for images */}
+        {(loading || (!imagesLoaded && venuesWithDistance.length > 0)) && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <Card key={index} className="w-full max-w-sm">
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <Skeleton className="h-6 w-3/4 mb-2" />
+                      <Skeleton className="h-3 w-1/2" />
+                    </div>
+                    <Skeleton className="h-5 w-16 ml-2" />
+                  </div>
+                </CardHeader>
+                
+                {/* Image area */}
+                <Skeleton className="w-full h-40" />
+                
+                <CardContent>
+                  {/* Categories */}
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    <Skeleton className="h-5 w-16" />
+                    <Skeleton className="h-5 w-20" />
+                    <Skeleton className="h-5 w-14" />
+                  </div>
+                  
+                  {/* Vibe Emoji and Text */}
+                  <div className="flex flex-col items-center mb-3">
+                    <Skeleton className="h-10 w-10 mb-2" />
+                    <Skeleton className="h-4 w-20" />
+                  </div>
+                  
+                  {/* Vibe Stats */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center">
+                      <Skeleton className="h-8 w-12 mx-auto mb-1" />
+                      <Skeleton className="h-3 w-16 mx-auto" />
+                    </div>
+                    <div className="text-center">
+                      <Skeleton className="h-8 w-12 mx-auto mb-1" />
+                      <Skeleton className="h-3 w-16 mx-auto" />
+                    </div>
+                  </div>
+                </CardContent>
+                
+                <CardFooter className="flex justify-between items-center">
+                  <div className="flex gap-2">
+                    <Skeleton className="h-5 w-16" />
+                  </div>
+                  <Skeleton className="h-8 w-20" />
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {/* Show actual venue cards when not loading and images are loaded */}
+        {!loading && imagesLoaded && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {venuesWithDistance.map((venue) => (
+              <VenueCard 
+                key={venue.id} 
+                venue={venue} 
+                distance={venue.distance}
+                onClick={() => {
+                  if (venue.source === 'google') {
+                    // For Google Places venues, store the venue data in sessionStorage
+                    sessionStorage.setItem(`google_venue_${venue.slug}`, JSON.stringify(venue));
+                  }
+                  router.push(`/venues/${venue.slug}`);
+                }} 
+              />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );
