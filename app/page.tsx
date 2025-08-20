@@ -82,7 +82,7 @@ export default function Home() {
 
   // Effect to show skeleton for a reasonable time before showing cards
   useEffect(() => {
-    if (venuesWithDistance.length > 0 && !imagesLoaded) {
+    if (venues.length > 0 && !imagesLoaded) {
       // Show skeleton for 1.5 seconds to allow images to load
       const timeout = setTimeout(() => {
         setImagesLoaded(true);
@@ -90,12 +90,12 @@ export default function Home() {
 
       return () => clearTimeout(timeout);
     }
-  }, [venuesWithDistance, imagesLoaded]);
+  }, [venues.length, imagesLoaded]);
 
   // Reset imagesLoaded when venues change
   useEffect(() => {
     setImagesLoaded(false);
-  }, [venues]);
+  }, [venues.length]);
 
   if (loading && !initialFetchDone) {
     return (
@@ -177,7 +177,7 @@ export default function Home() {
         )}
 
         {/* Show skeleton loading during initial load or while waiting for images */}
-        {(loading || (!imagesLoaded && venuesWithDistance.length > 0)) && (
+        {(loading || (!imagesLoaded && venues.length > 0)) && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, index) => (
               <Card key={index} className="w-full max-w-sm">
