@@ -123,9 +123,9 @@ export default function Home() {
     ));
   }, [venuesWithDistance, handleVenueClick]);
 
-  // Effect to show skeleton for a reasonable time before showing cards
+  // Effect to show skeleton for initial load only
   useEffect(() => {
-    if (venues.length > 0 && !imagesLoaded) {
+    if (venues.length > 0 && !imagesLoaded && !initialFetchDone) {
       // Show skeleton for 1.5 seconds to allow images to load
       const timeout = setTimeout(() => {
         setImagesLoaded(true);
@@ -133,12 +133,7 @@ export default function Home() {
 
       return () => clearTimeout(timeout);
     }
-  }, [venues.length, imagesLoaded]);
-
-  // Reset imagesLoaded when venues change
-  useEffect(() => {
-    setImagesLoaded(false);
-  }, [venues.length]);
+  }, [venues.length, imagesLoaded, initialFetchDone]);
 
   if (loading && !initialFetchDone) {
     return (
@@ -194,8 +189,8 @@ export default function Home() {
           </div>
         )}
 
-        {/* Show skeleton loading during initial load or while waiting for images */}
-        {(loading || (!imagesLoaded && venues.length > 0)) && (
+        {/* Show skeleton loading during initial load only */}
+        {(loading || (!imagesLoaded && venues.length > 0 && !initialFetchDone)) && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, index) => (
               <Card key={index} className="w-full max-w-sm">
@@ -250,8 +245,8 @@ export default function Home() {
           </div>
         )}
 
-        {/* Show actual venue cards when not loading and images are loaded */}
-        {!loading && imagesLoaded && (
+        {/* Show actual venue cards when not loading and venues are available */}
+        {!loading && venues.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {venueCards}
           </div>
