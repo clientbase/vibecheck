@@ -4,7 +4,7 @@ import Image from "next/image";
 import { VenueCard } from "@/components/VenueCard";
 import { Venue } from "@/lib/types";
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { getVenues } from "@/lib/api";
 import { useLocationWatch } from "@/lib/useLocation";
 import { calculateDistance } from "@/lib/utils";
@@ -19,6 +19,7 @@ export default function Home() {
   const [initialFetchDone, setInitialFetchDone] = useState(false);
   const [showSkeleton, setShowSkeleton] = useState(true);
   const [skeletonShown, setSkeletonShown] = useState(false);
+  const skeletonShownRef = useRef(false);
   const [searchQuery, setSearchQuery] = useState('night club bar');
   const [searchRadius, setSearchRadius] = useState(5000);
   const [lastSignificantLocation, setLastSignificantLocation] = useState<{lat: number, lng: number} | null>(null);
@@ -126,14 +127,23 @@ export default function Home() {
 
   // Effect to hide skeleton after initial load - only run once
   useEffect(() => {
-    if (venues.length > 0 && showSkeleton && !skeletonShown) {
+    // Check if skeleton has already been shown in this session
+    const hasShownSkeleton = localStorage.getItem('vibecheck-skeleton-shown');
+    
+    if (venues.length > 0 && showSkeleton && !hasShownSkeleton && !skeletonShownRef.current) {
+      skeletonShownRef.current = true;
       setSkeletonShown(true);
+      localStorage.setItem('vibecheck-skeleton-shown', 'true');
+      
       // Hide skeleton after 1.5 seconds to allow images to load
       const timeout = setTimeout(() => {
         setShowSkeleton(false);
       }, 1500);
 
       return () => clearTimeout(timeout);
+    } else if (hasShownSkeleton) {
+      // If skeleton was already shown, hide it immediately
+      setShowSkeleton(false);
     }
   }, [venues.length, showSkeleton, skeletonShown]);
 
@@ -192,7 +202,7 @@ export default function Home() {
         )}
 
         {/* Show skeleton loading during initial load only */}
-        {(loading || (showSkeleton && venues.length > 0 && !skeletonShown)) && (
+        {(loading || (showSkeleton && venues.length > 0 && !skeletonShown && !localStorage.getItem('vibecheck-skeleton-shown'))) && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, index) => (
               <Card key={index} className="w-full max-w-sm">
