@@ -17,7 +17,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [initialFetchDone, setInitialFetchDone] = useState(false);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [showSkeleton, setShowSkeleton] = useState(true);
   const [searchQuery, setSearchQuery] = useState('night club bar');
   const [searchRadius, setSearchRadius] = useState(5000);
   const [lastSignificantLocation, setLastSignificantLocation] = useState<{lat: number, lng: number} | null>(null);
@@ -123,17 +123,17 @@ export default function Home() {
     ));
   }, [venuesWithDistance, handleVenueClick]);
 
-  // Effect to show skeleton for initial load only
+  // Effect to hide skeleton after initial load
   useEffect(() => {
-    if (venues.length > 0 && !imagesLoaded && !initialFetchDone) {
-      // Show skeleton for 1.5 seconds to allow images to load
+    if (venues.length > 0 && showSkeleton) {
+      // Hide skeleton after 1.5 seconds to allow images to load
       const timeout = setTimeout(() => {
-        setImagesLoaded(true);
+        setShowSkeleton(false);
       }, 1500);
 
       return () => clearTimeout(timeout);
     }
-  }, [venues.length, imagesLoaded, initialFetchDone]);
+  }, [venues.length, showSkeleton]);
 
   if (loading && !initialFetchDone) {
     return (
@@ -190,7 +190,7 @@ export default function Home() {
         )}
 
         {/* Show skeleton loading during initial load only */}
-        {(loading || (!imagesLoaded && venues.length > 0 && !initialFetchDone)) && (
+        {(loading || (showSkeleton && venues.length > 0)) && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, index) => (
               <Card key={index} className="w-full max-w-sm">
