@@ -40,6 +40,7 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
   const [loading, setLoading] = useState<boolean>(false);
   const lastUpdateRef = useRef<number>(0);
   const isFirstUpdateRef = useRef<boolean>(true);
+  const lastLocationRef = useRef<{lat: number, lng: number} | null>(null);
 
   // Check permission status
   useEffect(() => {
@@ -57,6 +58,22 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
 
   const mergedOptions = useMemo(() => ({ ...defaultOptions, ...options }), [options]);
 
+  // Function to calculate distance between two points in meters
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371e3; // Earth's radius in meters
+    const φ1 = lat1 * Math.PI / 180;
+    const φ2 = lat2 * Math.PI / 180;
+    const Δφ = (lat2 - lat1) * Math.PI / 180;
+    const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c;
+  };
+
   const getLocation = useCallback(() => {
     if (!navigator.geolocation) {
       setError({
@@ -73,25 +90,45 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
     const successCallback = (position: GeolocationPosition) => {
       const now = Date.now();
       const timeSinceLastUpdate = now - lastUpdateRef.current;
+      const newLat = position.coords.latitude;
+      const newLng = position.coords.longitude;
       
-      // Always allow the first update, then throttle subsequent updates
-      if (isFirstUpdateRef.current || timeSinceLastUpdate > 10000) {
+      // Check if this is a significant location change (50 meters or more)
+      let isSignificantChange = true;
+      if (lastLocationRef.current && !isFirstUpdateRef.current) {
+        const distance = calculateDistance(
+          lastLocationRef.current.lat,
+          lastLocationRef.current.lng,
+          newLat,
+          newLng
+        );
+        isSignificantChange = distance > 50; // 50 meters threshold
+      }
+      
+      // Always allow the first update, then only update on significant changes
+      if (isFirstUpdateRef.current || (timeSinceLastUpdate > 10000 && isSignificantChange)) {
         console.log('✅ Location updated:', {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
+          lat: newLat,
+          lng: newLng,
           accuracy: position.coords.accuracy,
-          timeSinceLastUpdate: isFirstUpdateRef.current ? 'First update' : `${Math.round(timeSinceLastUpdate / 1000)}s ago`
+          timeSinceLastUpdate: isFirstUpdateRef.current ? 'First update' : `${Math.round(timeSinceLastUpdate / 1000)}s ago`,
+          distanceChange: lastLocationRef.current ? `${Math.round(calculateDistance(lastLocationRef.current.lat, lastLocationRef.current.lng, newLat, newLng))}m` : 'N/A'
         });
         
         const locationData: LocationData = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
+          latitude: newLat,
+          longitude: newLng,
           accuracy: position.coords.accuracy,
           timestamp: position.timestamp,
         };
         setLocation(locationData);
         lastUpdateRef.current = now;
+        lastLocationRef.current = { lat: newLat, lng: newLng };
         isFirstUpdateRef.current = false;
+      } else {
+        console.log('📍 Location update ignored - not significant enough:', {
+          distanceChange: lastLocationRef.current ? `${Math.round(calculateDistance(lastLocationRef.current.lat, lastLocationRef.current.lng, newLat, newLng))}m` : 'N/A'
+        });
       }
       setLoading(false);
     };
