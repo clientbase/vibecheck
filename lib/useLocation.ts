@@ -39,6 +39,7 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
   const [error, setError] = useState<LocationError | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const lastUpdateRef = useRef<number>(0);
+  const isFirstUpdateRef = useRef<boolean>(true);
 
   // Check permission status
   useEffect(() => {
@@ -73,13 +74,13 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
       const now = Date.now();
       const timeSinceLastUpdate = now - lastUpdateRef.current;
       
-      // Only update if it's been at least 10 seconds since last update
-      if (timeSinceLastUpdate > 10000) {
+      // Always allow the first update, then throttle subsequent updates
+      if (isFirstUpdateRef.current || timeSinceLastUpdate > 10000) {
         console.log('✅ Location updated:', {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
           accuracy: position.coords.accuracy,
-          timeSinceLastUpdate: `${Math.round(timeSinceLastUpdate / 1000)}s ago`
+          timeSinceLastUpdate: isFirstUpdateRef.current ? 'First update' : `${Math.round(timeSinceLastUpdate / 1000)}s ago`
         });
         
         const locationData: LocationData = {
@@ -90,6 +91,7 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
         };
         setLocation(locationData);
         lastUpdateRef.current = now;
+        isFirstUpdateRef.current = false;
       }
       setLoading(false);
     };

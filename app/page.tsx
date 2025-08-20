@@ -4,7 +4,7 @@ import Image from "next/image";
 import { VenueCard } from "@/components/VenueCard";
 import { Venue } from "@/lib/types";
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { getVenues } from "@/lib/api";
 import { useLocationWatch } from "@/lib/useLocation";
 import { calculateDistance } from "@/lib/utils";
@@ -80,6 +80,27 @@ export default function Home() {
     });
   }, [venues, location?.latitude, location?.longitude]);
 
+  // Memoized venue card click handler
+  const handleVenueClick = useCallback((venue: Venue & { distance?: number }) => {
+    if (venue.source === 'google') {
+      // For Google Places venues, store the venue data in sessionStorage
+      sessionStorage.setItem(`google_venue_${venue.slug}`, JSON.stringify(venue));
+    }
+    router.push(`/venues/${venue.slug}`);
+  }, [router]);
+
+  // Memoized venue cards to prevent unnecessary re-renders
+  const venueCards = useMemo(() => {
+    return venuesWithDistance.map((venue) => (
+      <VenueCard 
+        key={venue.id} 
+        venue={venue} 
+        distance={venue.distance}
+        onClick={() => handleVenueClick(venue)} 
+      />
+    ));
+  }, [venuesWithDistance, handleVenueClick]);
+
   // Effect to show skeleton for a reasonable time before showing cards
   useEffect(() => {
     if (venues.length > 0 && !imagesLoaded) {
@@ -133,32 +154,7 @@ export default function Home() {
     <>
       {/* <Header /> removed, global header is used */}
       <div className="container mx-auto px-4 py-8">
-        {/* Search Controls */}
-        <div className="mb-8">
-          <h3 className="text-lg font-semibold mb-4">Adjust Search Parameters</h3>
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search Query"
-              className="border border-gray-300 rounded-lg px-3 py-2 w-full sm:w-auto"
-            />
-            <input
-              type="number"
-              value={searchRadius}
-              onChange={(e) => setSearchRadius(Number(e.target.value))}
-              placeholder="Radius (meters)"
-              className="border border-gray-300 rounded-lg px-3 py-2 w-full sm:w-auto"
-            />
-            <button
-              onClick={handleSearch}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg w-full sm:w-auto"
-            >
-              Search
-            </button>
-          </div>
-        </div>
+
 
         {locationLoading && (
           <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
@@ -235,20 +231,7 @@ export default function Home() {
         {/* Show actual venue cards when not loading and images are loaded */}
         {!loading && imagesLoaded && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {venuesWithDistance.map((venue) => (
-              <VenueCard 
-                key={venue.id} 
-                venue={venue} 
-                distance={venue.distance}
-                onClick={() => {
-                  if (venue.source === 'google') {
-                    // For Google Places venues, store the venue data in sessionStorage
-                    sessionStorage.setItem(`google_venue_${venue.slug}`, JSON.stringify(venue));
-                  }
-                  router.push(`/venues/${venue.slug}`);
-                }} 
-              />
-            ))}
+            {venueCards}
           </div>
         )}
       </div>
