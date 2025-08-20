@@ -18,11 +18,9 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [initialFetchDone, setInitialFetchDone] = useState(false);
   const [showSkeleton, setShowSkeleton] = useState(true);
-  const [skeletonShown, setSkeletonShown] = useState(false);
-  const skeletonShownRef = useRef(false);
   const [searchQuery, setSearchQuery] = useState('night club bar');
   const [searchRadius, setSearchRadius] = useState(5000);
-  const [lastSignificantLocation, setLastSignificantLocation] = useState<{lat: number, lng: number} | null>(null);
+
 
   const handleSearch = () => {
     if (location) {
@@ -35,6 +33,7 @@ export default function Home() {
     enableHighAccuracy: true,
     timeout: 30000, // 30 seconds for mobile GPS
     maximumAge: 30000, // 30 seconds - allow cached location within 30s
+    distanceThreshold: 50, // Only update when user moves 50+ meters
   });
 
   // Function to fetch venues with optional location
@@ -63,36 +62,15 @@ export default function Home() {
     }
   }, [location?.latitude, location?.longitude]);
 
-  // Function to check if location change is significant (more than 50 meters)
-  const isLocationChangeSignificant = useCallback((newLat: number, newLng: number) => {
-    if (!lastSignificantLocation) return true; // First location is always significant
-    
-    const distance = calculateDistance(
-      lastSignificantLocation.lat, 
-      lastSignificantLocation.lng, 
-      newLat, 
-      newLng
-    );
-    
-    return distance > 50; // 50 meters threshold
-  }, [lastSignificantLocation]);
-
-  // Effect to update significant location when location changes
-  useEffect(() => {
-    if (location && isLocationChangeSignificant(location.latitude, location.longitude)) {
-      setLastSignificantLocation({ lat: location.latitude, lng: location.longitude });
-    }
-  }, [location?.latitude, location?.longitude, isLocationChangeSignificant]);
-
   // Calculate distances for venues when location is available
   const venuesWithDistance = useMemo(() => {
-    if (!lastSignificantLocation) {
+    if (!location) {
       return venues.map(venue => ({ ...venue, distance: undefined }));
     }
     
     const venuesWithDistances = venues.map(venue => ({
       ...venue,
-      distance: calculateDistance(lastSignificantLocation.lat, lastSignificantLocation.lng, venue.lat, venue.lon)
+      distance: calculateDistance(location.latitude, location.longitude, venue.lat, venue.lon)
     }));
     
     // Sort by distance when location is available
@@ -102,7 +80,7 @@ export default function Home() {
       if (b.distance === undefined) return -1;
       return a.distance - b.distance;
     });
-  }, [venues, lastSignificantLocation]);
+  }, [venues, location?.latitude, location?.longitude]);
 
   // Memoized venue card click handler
   const handleVenueClick = useCallback((venue: Venue & { distance?: number }) => {
@@ -125,27 +103,17 @@ export default function Home() {
     ));
   }, [venuesWithDistance, handleVenueClick]);
 
-  // Effect to hide skeleton after initial load - only run once
+  // Effect to hide skeleton after initial load
   useEffect(() => {
-    // Check if skeleton has already been shown in this session
-    const hasShownSkeleton = localStorage.getItem('vibecheck-skeleton-shown');
-    
-    if (venues.length > 0 && showSkeleton && !hasShownSkeleton && !skeletonShownRef.current) {
-      skeletonShownRef.current = true;
-      setSkeletonShown(true);
-      localStorage.setItem('vibecheck-skeleton-shown', 'true');
-      
+    if (venues.length > 0 && showSkeleton) {
       // Hide skeleton after 1.5 seconds to allow images to load
       const timeout = setTimeout(() => {
         setShowSkeleton(false);
       }, 1500);
 
       return () => clearTimeout(timeout);
-    } else if (hasShownSkeleton) {
-      // If skeleton was already shown, hide it immediately
-      setShowSkeleton(false);
     }
-  }, [venues.length, showSkeleton, skeletonShown]);
+  }, [venues.length, showSkeleton]);
 
   if (loading && !initialFetchDone) {
     return (
@@ -202,7 +170,7 @@ export default function Home() {
         )}
 
         {/* Show skeleton loading during initial load only */}
-        {(loading || (showSkeleton && venues.length > 0 && !skeletonShown && !localStorage.getItem('vibecheck-skeleton-shown'))) && (
+        {(loading || (showSkeleton && venues.length > 0)) && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, index) => (
               <Card key={index} className="w-full max-w-sm">

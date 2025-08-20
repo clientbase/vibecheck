@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { calculateDistance } from './utils';
 
 export interface LocationData {
   latitude: number;
@@ -25,6 +26,7 @@ export interface UseLocationOptions {
   timeout?: number;
   maximumAge?: number;
   watch?: boolean;
+  distanceThreshold?: number; // Distance in meters for significant location changes
 }
 
 const defaultOptions: UseLocationOptions = {
@@ -32,6 +34,7 @@ const defaultOptions: UseLocationOptions = {
   timeout: 30000, // 30 seconds - longer timeout for mobile GPS
   maximumAge: 30000, // 30 seconds - allow cached location within 30s
   watch: false,
+  distanceThreshold: 50, // 50 meters default threshold
 };
 
 export function useLocation(options: UseLocationOptions = {}): UseLocationReturn {
@@ -58,21 +61,7 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
 
   const mergedOptions = useMemo(() => ({ ...defaultOptions, ...options }), [options]);
 
-  // Function to calculate distance between two points in meters
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-    const R = 6371e3; // Earth's radius in meters
-    const φ1 = lat1 * Math.PI / 180;
-    const φ2 = lat2 * Math.PI / 180;
-    const Δφ = (lat2 - lat1) * Math.PI / 180;
-    const Δλ = (lon2 - lon1) * Math.PI / 180;
 
-    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-              Math.cos(φ1) * Math.cos(φ2) *
-              Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    return R * c;
-  };
 
   const getLocation = useCallback(() => {
     if (!navigator.geolocation) {
@@ -93,16 +82,17 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
       const newLat = position.coords.latitude;
       const newLng = position.coords.longitude;
       
-      // Check if this is a significant location change (50 meters or more)
+      // Check if this is a significant location change
       let isSignificantChange = true;
       if (lastLocationRef.current && !isFirstUpdateRef.current) {
-        const distance = calculateDistance(
+        const distanceKm = calculateDistance(
           lastLocationRef.current.lat,
           lastLocationRef.current.lng,
           newLat,
           newLng
         );
-        isSignificantChange = distance > 50; // 50 meters threshold
+        const distanceM = distanceKm * 1000; // Convert km to meters
+        isSignificantChange = distanceM > mergedOptions.distanceThreshold!;
       }
       
       // Always allow the first update, then only update on significant changes
@@ -112,7 +102,7 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
           lng: newLng,
           accuracy: position.coords.accuracy,
           timeSinceLastUpdate: isFirstUpdateRef.current ? 'First update' : `${Math.round(timeSinceLastUpdate / 1000)}s ago`,
-          distanceChange: lastLocationRef.current ? `${Math.round(calculateDistance(lastLocationRef.current.lat, lastLocationRef.current.lng, newLat, newLng))}m` : 'N/A'
+          distanceChange: lastLocationRef.current ? `${Math.round(calculateDistance(lastLocationRef.current.lat, lastLocationRef.current.lng, newLat, newLng) * 1000)}m` : 'N/A'
         });
         
         const locationData: LocationData = {
@@ -127,7 +117,7 @@ export function useLocation(options: UseLocationOptions = {}): UseLocationReturn
         isFirstUpdateRef.current = false;
       } else {
         console.log('📍 Location update ignored - not significant enough:', {
-          distanceChange: lastLocationRef.current ? `${Math.round(calculateDistance(lastLocationRef.current.lat, lastLocationRef.current.lng, newLat, newLng))}m` : 'N/A'
+          distanceChange: lastLocationRef.current ? `${Math.round(calculateDistance(lastLocationRef.current.lat, lastLocationRef.current.lng, newLat, newLng) * 1000)}m` : 'N/A'
         });
       }
       setLoading(false);
