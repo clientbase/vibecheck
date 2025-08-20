@@ -20,6 +20,7 @@ export default function Home() {
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [searchQuery, setSearchQuery] = useState('night club bar');
   const [searchRadius, setSearchRadius] = useState(5000);
+  const [lastSignificantLocation, setLastSignificantLocation] = useState<{lat: number, lng: number} | null>(null);
 
   const handleSearch = () => {
     if (location) {
@@ -60,15 +61,36 @@ export default function Home() {
     }
   }, [location?.latitude, location?.longitude]);
 
+  // Function to check if location change is significant (more than 50 meters)
+  const isLocationChangeSignificant = useCallback((newLat: number, newLng: number) => {
+    if (!lastSignificantLocation) return true; // First location is always significant
+    
+    const distance = calculateDistance(
+      lastSignificantLocation.lat, 
+      lastSignificantLocation.lng, 
+      newLat, 
+      newLng
+    );
+    
+    return distance > 50; // 50 meters threshold
+  }, [lastSignificantLocation]);
+
+  // Effect to update significant location when location changes
+  useEffect(() => {
+    if (location && isLocationChangeSignificant(location.latitude, location.longitude)) {
+      setLastSignificantLocation({ lat: location.latitude, lng: location.longitude });
+    }
+  }, [location?.latitude, location?.longitude, isLocationChangeSignificant]);
+
   // Calculate distances for venues when location is available
   const venuesWithDistance = useMemo(() => {
-    if (!location) {
+    if (!lastSignificantLocation) {
       return venues.map(venue => ({ ...venue, distance: undefined }));
     }
     
     const venuesWithDistances = venues.map(venue => ({
       ...venue,
-      distance: calculateDistance(location.latitude, location.longitude, venue.lat, venue.lon)
+      distance: calculateDistance(lastSignificantLocation.lat, lastSignificantLocation.lng, venue.lat, venue.lon)
     }));
     
     // Sort by distance when location is available
@@ -78,7 +100,7 @@ export default function Home() {
       if (b.distance === undefined) return -1;
       return a.distance - b.distance;
     });
-  }, [venues, location?.latitude, location?.longitude]);
+  }, [venues, lastSignificantLocation]);
 
   // Memoized venue card click handler
   const handleVenueClick = useCallback((venue: Venue & { distance?: number }) => {
